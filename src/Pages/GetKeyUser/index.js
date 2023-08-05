@@ -43,7 +43,7 @@ function GetKeyUser() {
     } else {
       messageApi.open({
         type: "error",
-        content: `Bạn Đã Get Key Rồi Vui Lòng Mở Tab Mới Get Link Lại`,
+        content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
     });
     }
 
