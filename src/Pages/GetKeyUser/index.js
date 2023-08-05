@@ -25,7 +25,7 @@ function GetKeyUser() {
 console.log(document.referrer)
   useEffect(() => {
     const checkUser = document.referrer
-    if (checkUser.includes("http://localhost:3000") && getCookie("referrer") === "") {
+    if (checkUser.includes("https://dilink.net/quangly/chuyen_URL.php?url_chuyen=https://www.duongshop.xyz/") && getCookie("referrer") === "") {
 
       fetchApi();
     }else{
