@@ -14,7 +14,6 @@ function GetKeyUser() {
     
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
-    console.log(dataDocAllKey)
     setDataSource(dataDocAllKey[0]);
     setCookiePhut("referrer",document.referrer,1)
   };
@@ -40,7 +39,7 @@ function GetKeyUser() {
           {
             dataSource && <>
                <h1>Key Của Bạn Là</h1>
-              <Tag color="red">{dataSource?.key}</Tag>
+              <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Cố Ý Sẽ Bị Thoát Ra</p>
             </>
