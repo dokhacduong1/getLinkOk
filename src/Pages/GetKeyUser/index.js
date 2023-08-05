@@ -1,4 +1,4 @@
-import { Card, Tag, message } from "antd";
+import { Card, Select, Tag, message } from "antd";
 import "./GetKeyUser.scss";
 import { FloatButton } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
@@ -12,27 +12,28 @@ function GetKeyUser() {
   const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const [dataSource, setDataSource] = useState([]);
-  const fetchApi = async () => {
+  const [checkSuccess, setCheckSuccess] = useState(false);
+  const fetchApi = async (nameGame) => {
 
     const data = await getDocs(getKeyCollectionRef);
-    const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
-   if (dataDocAllKey.length===0){
-    setDataSource({key:"Key Ngày Hôm Nay Đã Hết"});
-   }else{
-    setDataSource(dataDocAllKey[0]);
-   }
-    
-    setCookiePhut("referrer",document.referrer,1)
-    if(dataDocAllKey.length>0){
+    const dataDocAllKey = data.docs.filter(dataFilter => dataFilter.data().nameGame === nameGame).map(dataMap => dataMap.data())
+    if (dataDocAllKey.length === 0) {
+      setDataSource({ key: "Key Ngày Hôm Nay Đã Hết" });
+    } else {
+      setDataSource(dataDocAllKey[0]);
+    }
+
+    setCookiePhut("referrer", document.referrer, 1)
+    if (dataDocAllKey.length > 0) {
       const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
       await deleteDoc(keyDoc);
     }
-  
+    setCheckSuccess(false)
   };
 
   // Tăng số lượng tải lại sau mỗi lần load
 
-  
+
 
 
 
@@ -45,31 +46,49 @@ function GetKeyUser() {
     const link = ["https://dilink.net/", "https://beelink.life/"]
     const checkOk = link.some(dataSome => dataSome === checkUser)
     if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
-
-      fetchApi();
+      setCheckSuccess(!checkSuccess)
+      // fetchApi();
     } else {
       messageApi.open({
         type: "error",
         content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
-    });
+      });
     }
 
   }, []);
 
-
+  const handleClick = async (value) => {
+    fetchApi(value)
+    setCheckSuccess(false)
+  }
 
   return (
     <>
-     {contextHolder}
+      {contextHolder}
       <div className="getKeyUser">
         <Card className="getKeyUser__card">
           {
             dataSource && <>
+              {
+                checkSuccess && (<>
+                  <Select onChange={handleClick}
+                    options={[
+                      { value: "zingspeed", label: "Zing Speed" },
+                      { value: "freefire", label: "Free Fire" },
+                      { value: "playtogether", label: "Play Together" },
+                    ]}
+                    style={{ width: 170 }}
+                    placeholder="Tìm Kiếm"
+                    className="search__welcome-form-select"
+                  />
+                </>)
+              }
+
               <h1>Key Của Bạn Là</h1>
               <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Qua 1 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
-            
+
             </>
           }
 
