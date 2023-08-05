@@ -90,8 +90,8 @@ function GetKeyUser() {
 
               <h1>Key Của Bạn Là</h1>
               <Tag color="red">{dataSource?.key || stringNoti}</Tag>
-              <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
-              <p> Qua 1 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
+              <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 5 Phút</p>
+              <p> Qua 5 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
 
             </>
           }
