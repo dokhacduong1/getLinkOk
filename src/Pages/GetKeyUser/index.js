@@ -28,7 +28,7 @@ console.log(document.referrer)
     const link =["https://dilink.net/","https://beelink.life/"]
 
     const checkOk = link.some(dataSome =>dataSome === checkUser)
-    
+    console.log(checkOk)
     if (checkOk && getCookie("referrer") === "") {
 
       fetchApi();
