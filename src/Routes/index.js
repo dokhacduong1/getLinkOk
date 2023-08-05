@@ -9,6 +9,7 @@ import AddKey from "../Pages/AddKey";
 import KeyManagement from "../Pages/KeyManagement";
 import HelloWord from "../Pages/HelloWord/Index";
 import GetKeyUser from "../Pages/GetKeyUser";
+import Home from "../Pages/Home";
 
 export const routes = [
   {
@@ -17,11 +18,15 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <GetKeyUser />,
+        element: <Home />,
       },
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "key/:id",
+        element: <GetKeyUser />,
       },
       // {
       //   path: "register",

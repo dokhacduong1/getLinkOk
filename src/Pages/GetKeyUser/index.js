@@ -5,49 +5,30 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { auth, db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
 import { getCookie, setCookiePhien, setCookiePhut } from "../../Helpers/cookie";
-
+import "./GetKeyUser.scss";
 function GetKeyUser() {
- 
-  const getKeyCollectionRef = collection(db, "getKey");
-  const [dataSource, setDataSource] = useState([]);
-  const fetchApi = async () => {
-    
-    const data = await getDocs(getKeyCollectionRef);
-    const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
-    setDataSource(dataDocAllKey[0]);
-    // setCookiePhut("referrer",document.referrer,1)
-    setCookiePhien("referrer",document.referrer)
-    const keyDoc = doc(db, "getKey", dataDocAllKey[0].id);
-    await deleteDoc(keyDoc);
-  };
-
-
-
   useEffect(() => {
-    const checkUser = document.referrer
-    const link =["https://dilink.net/","https://beelink.life/"]
-    const checkOk = link.some(dataSome =>dataSome === checkUser)
-    if (checkOk && getCookie("referrer") === "") {
-
-      fetchApi();
-    }else{
+  
+    if (getCookie("referrer") === "") {
       window.close()
+    }else{
+      // window.close()
     }
   }, []);
+  
 
   return (
     <>
       <div className="getKeyUser">
         <Card className="getKeyUser__card">
-          {
-            dataSource && <>
+         <>
                <h1>Key Của Bạn Là</h1>
-              <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
+              <Tag color="red">{"Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Cố Ý Sẽ Bị Thoát Ra</p>
-              <button onClick={()=>{ window.close()}}>ok</button>
+             
             </>
-          }
+         
          
         </Card>
       </div>
