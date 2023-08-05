@@ -13,23 +13,17 @@ function GetKeyUser() {
   const fetchApi = async () => {
     
     const data = await getDocs(getKeyCollectionRef);
-    const dataDocAllKey = data.docs
-      .filter(
-        (dataFilter) => dataFilter.data().uidUser === auth?.currentUser?.uid
-      )
-      .map((dataMap) => dataMap.data());
+    const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
     setDataSource(dataDocAllKey[0]);
     setCookiePhut("referrer",document.referrer,1)
   };
 
 
-console.log(document.referrer)
-console.log(dataSource)
+
   useEffect(() => {
     const checkUser = document.referrer
     const link =["https://dilink.net/","https://beelink.life/"]
     const checkOk = link.some(dataSome =>dataSome === checkUser)
-    console.log(checkOk)
     if (checkOk && getCookie("referrer") === "") {
 
       fetchApi();
