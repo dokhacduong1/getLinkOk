@@ -16,10 +16,18 @@ function GetKeyUser() {
 
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
+   if (dataDocAllKey.length===0){
+    setDataSource({key:"Key Ngày Hôm Nay Đã Hết"});
+   }else{
     setDataSource(dataDocAllKey[0]);
+   }
+    
     setCookiePhut("referrer",document.referrer,1)
-    const keyDoc = doc(db, "getKey", dataDocAllKey[0].id);
-    await deleteDoc(keyDoc);
+    if(dataDocAllKey.length>0){
+      const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
+      await deleteDoc(keyDoc);
+    }
+  
   };
 
   // Tăng số lượng tải lại sau mỗi lần load
