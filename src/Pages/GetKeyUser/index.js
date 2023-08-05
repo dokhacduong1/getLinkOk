@@ -44,7 +44,8 @@ function GetKeyUser() {
               <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Cố Ý Sẽ Bị Thoát Ra</p>
-              <button onClick={()=>{window.close()}}>ok</button>
+              <button onClick={()=>{var customWindow = window.open('', '_blank', '');
+    customWindow.close();}}>ok</button>
             </>
           }
          
