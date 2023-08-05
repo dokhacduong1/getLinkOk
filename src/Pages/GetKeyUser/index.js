@@ -1,4 +1,4 @@
-import { Card, Tag } from "antd";
+import { Card, Tag, message } from "antd";
 import "./GetKeyUser.scss";
 import { FloatButton } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
@@ -9,6 +9,7 @@ import { decodeString, encodeNumberToBase, increaseReloadCount } from "../../Hel
 
 function GetKeyUser() {
   var reloadCount = localStorage.getItem('reloadCount');
+  const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const [dataSource, setDataSource] = useState([]);
   const fetchApi = async () => {
@@ -40,7 +41,10 @@ function GetKeyUser() {
 
       fetchApi();
     } else {
-      console.log("sai")
+      messageApi.open({
+        type: "error",
+        content: `Bạn Đã Get Key Rồi Vui Lòng Mở Tab Mới Get Link Lại`,
+    });
     }
 
   }, []);
@@ -49,6 +53,7 @@ function GetKeyUser() {
 
   return (
     <>
+     {contextHolder}
       <div className="getKeyUser">
         <Card className="getKeyUser__card">
           {
