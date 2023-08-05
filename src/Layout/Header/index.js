@@ -20,7 +20,7 @@ function Header(props) {
                     <div className={"header__logo-img " + (collapsed && "header__logo-img-false")}>
                         {
 
-                            <Link>{collapsed ? <img src={logo1} alt="logo1" /> : <img src={logo2} alt="logo2" />}</Link>
+                            <span>{collapsed ? <img src={logo1} alt="logo1" /> : <img src={logo2} alt="logo2" />}</span>
                         }
 
                     </div>
