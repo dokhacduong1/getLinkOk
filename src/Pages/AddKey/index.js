@@ -11,7 +11,7 @@ function AddKey() {
     const handleFinish = async (infoForm) => {
 
         const listKey = infoForm.key.split("\n")
-        
+ 
         listKey.map(async dataMap => {
             const newDocRef = doc(getKeyCollectionRef);
             const objectNew = {

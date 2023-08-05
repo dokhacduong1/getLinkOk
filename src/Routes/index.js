@@ -22,7 +22,7 @@ export const routes = [
         element: <GetKeyUser />,
       },
       {
-        path: "login",
+        path: "namicute",
         element: <Login />,
       },
       {
