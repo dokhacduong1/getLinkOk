@@ -10,7 +10,8 @@ function AddKey() {
     const [form] = Form.useForm();
     const handleFinish = async (infoForm) => {
 
-        const listKey = infoForm.key.split(";")
+        const listKey = infoForm.key.split("\n")
+        
         listKey.map(async dataMap => {
             const newDocRef = doc(getKeyCollectionRef);
             const objectNew = {
