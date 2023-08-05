@@ -10,6 +10,7 @@ import KeyManagement from "../Pages/KeyManagement";
 import HelloWord from "../Pages/HelloWord/Index";
 import GetKeyUser from "../Pages/GetKeyUser";
 
+
 export const routes = [
   {
     path: "/",
@@ -22,6 +23,10 @@ export const routes = [
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "key/:id",
+        element: <GetKeyUser />,
       },
       // {
       //   path: "register",
