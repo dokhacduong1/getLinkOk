@@ -23,6 +23,7 @@ function GetKeyUser() {
 
 
 console.log(document.referrer)
+console.log(dataSource)
   useEffect(() => {
     const checkUser = document.referrer
     const link =["https://dilink.net/","https://beelink.life/"]
