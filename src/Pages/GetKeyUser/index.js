@@ -12,6 +12,7 @@ function GetKeyUser() {
   const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const [dataSource, setDataSource] = useState([]);
+  const [stringNoti,setStringNoti] = useState("Lỗi Key Vui Lòng Get Link Lại")
   const [checkSuccess, setCheckSuccess] = useState(false);
   const fetchApi = async (nameGame) => {
 
@@ -46,8 +47,9 @@ function GetKeyUser() {
     const link = ["https://dilink.net/", "https://beelink.life/"]
     const checkOk = link.some(dataSome => dataSome === checkUser)
     if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
+      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key")
       setCheckSuccess(!checkSuccess)
-      // fetchApi();
+      fetchApi();
     } else {
       messageApi.open({
         type: "error",
@@ -58,6 +60,7 @@ function GetKeyUser() {
   }, []);
 
   const handleClick = async (value) => {
+  
     fetchApi(value)
     setCheckSuccess(false)
   }
@@ -72,20 +75,21 @@ function GetKeyUser() {
               {
                 checkSuccess && (<>
                   <Select onChange={handleClick}
+                  
                     options={[
                       { value: "zingspeed", label: "Zing Speed" },
                       { value: "freefire", label: "Free Fire" },
                       { value: "playtogether", label: "Play Together" },
                     ]}
                     style={{ width: 170 }}
-                    placeholder="Tìm Kiếm"
+                    placeholder="Tên Game"
                     className="search__welcome-form-select"
                   />
                 </>)
               }
 
               <h1>Key Của Bạn Là</h1>
-              <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
+              <Tag color="red">{dataSource?.key || stringNoti}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Qua 1 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
 
