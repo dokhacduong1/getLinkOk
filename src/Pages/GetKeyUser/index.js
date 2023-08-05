@@ -14,6 +14,7 @@ function GetKeyUser() {
     
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
+    console.log(dataDocAllKey)
     setDataSource(dataDocAllKey[0]);
     setCookiePhut("referrer",document.referrer,1)
   };
