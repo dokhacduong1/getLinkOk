@@ -1,7 +1,7 @@
 import { Card, Tag } from "antd";
 import "./GetKeyUser.scss";
 import { FloatButton } from "antd";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { auth, db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
 import { getCookie, setCookiePhut } from "../../Helpers/cookie";
@@ -16,6 +16,8 @@ function GetKeyUser() {
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
     setDataSource(dataDocAllKey[0]);
     setCookiePhut("referrer",document.referrer,1)
+    const keyDoc = doc(db, "getKey", dataDocAllKey[0].id);
+    await deleteDoc(keyDoc);
   };
 
 
