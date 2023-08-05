@@ -24,7 +24,7 @@ function GetKeyUser() {
       setDataSource(dataDocAllKey[0]);
     }
 
-    setCookiePhut("referrer", document.referrer, 1)
+    setCookiePhut("referrer", document.referrer, 5)
     if (dataDocAllKey.length > 0) {
       const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
       await deleteDoc(keyDoc);
