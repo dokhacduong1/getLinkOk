@@ -4,7 +4,7 @@ import { FloatButton } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { auth, db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
-import { getCookie, setCookiePhut } from "../../Helpers/cookie";
+import { getCookie, setCookiePhien, setCookiePhut } from "../../Helpers/cookie";
 
 function GetKeyUser() {
  
@@ -15,7 +15,8 @@ function GetKeyUser() {
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
     setDataSource(dataDocAllKey[0]);
-    setCookiePhut("referrer",document.referrer,1)
+    // setCookiePhut("referrer",document.referrer,1)
+    setCookiePhien("referrer",document.referrer)
     const keyDoc = doc(db, "getKey", dataDocAllKey[0].id);
     await deleteDoc(keyDoc);
   };
@@ -44,8 +45,7 @@ function GetKeyUser() {
               <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
               <p> Cố Ý Sẽ Bị Thoát Ra</p>
-              <button onClick={()=>{var customWindow = window.open('', '_blank', '');
-    customWindow.close();}}>ok</button>
+              <button onClick={()=>{ window.close()}}>ok</button>
             </>
           }
          

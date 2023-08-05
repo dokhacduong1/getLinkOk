@@ -29,6 +29,10 @@ export function getCookie(cname) {
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
   }
+  export function setCookiePhien(cname, cvalue) {
+   
+    document.cookie = cname + "=" + cvalue;
+  }
   // Hàm xóa cookie
   export function deleteCookie(cname) {
     document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
