@@ -1,0 +1,27 @@
+.login{
+   &__container{
+    padding: 50px;
+    border: 1px solid #333;
+    border-radius: 10px;
+   }
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   &__form{
+   
+   
+    &-input{
+        &:hover{
+            border-color: rgb(107, 107, 107) !important;
+        }
+        &:focus{
+            border-color: rgb(107, 107, 107) !important;
+        }
+    }
+    &-button{
+        background-color: #333 !important;
+    }
+   }
+   
+}

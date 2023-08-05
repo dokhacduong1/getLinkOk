@@ -1,0 +1,13 @@
+.getKeyUser {
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ &__card{
+    border: 1px solid #ddd;
+   text-align: center;
+   span{
+    font-size: 20px;
+   }
+ }
+}

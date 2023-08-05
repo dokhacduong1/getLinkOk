@@ -1,0 +1,74 @@
+.search{
+    &__welcome {
+      text-align: center !important;
+      &-form {
+        padding-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &-input {
+          &:hover,
+          &:focus {
+            border-color: rgb(16, 82, 136) !important;
+          }
+        }
+        &-select {
+          div {
+            &:hover,
+            &:focus {
+              border-color: rgb(16, 82, 136) !important;
+            }
+          }
+        }
+        &-button {
+          background-color: rgb(16, 82, 136);
+          &:hover,
+          &:focus {
+            background-color: rgb(33, 89, 136) !important;
+          }
+        }
+      }
+      &-tags{
+          padding-bottom: 15px;
+          text-align: center;
+          &-list{
+              cursor: pointer;
+              &:hover{
+                  background-color: #ffacac;
+              }
+          }
+        }
+        &-infoCompany{
+          text-align: center;
+          h3{
+              margin: 0;
+          }
+          &-card{
+             
+             cursor: pointer;
+             &:hover{
+              background-color: #dddddd;
+             }
+          }
+        }
+    }
+    &__button {
+      margin: 0px 10px;
+      &:active,
+      &:hover {
+        color: orange !important;
+        border-color: orange !important;
+      }
+    }
+   
+  }
+  
+  @media (max-width: 992.9px){
+    .search{
+      &__welcome{
+        &-item{
+          padding: 5px 0px;
+        }
+      }
+  }
+}

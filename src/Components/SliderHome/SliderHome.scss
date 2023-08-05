@@ -1,0 +1,23 @@
+.layout{
+    &__slider{
+        border-right: 1px solid #ddd;
+        &-menu{
+            li{
+                &:active{
+                    background-color: #ffffff !important;
+                }
+            }
+        }
+        &-item{
+            color: #000000 !important;
+        }
+    }
+}
+.ant-menu-item-selected{
+    color: #ffffff !important;
+    background-color: #333 !important;
+    color: #fff !important;
+}
+.ant-menu-submenu-arrow{
+    color: #000000 !important;
+}

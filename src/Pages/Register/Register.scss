@@ -1,0 +1,28 @@
+.register{
+    &__container{
+     padding: 50px;
+     border: 1px solid rgb(16, 82, 136);
+     border-radius: 10px;
+    }
+     text-align: left;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+    &__form{
+    
+    
+     &-input{
+         &:hover{
+             border-color: rgb(107, 107, 107) !important;
+         }
+         &:focus{
+             border-color: rgb(107, 107, 107) !important;
+         }
+     }
+     &-button{
+         background-color: rgb(16, 82, 136) !important;
+     }
+    }
+    
+ }
+ 
