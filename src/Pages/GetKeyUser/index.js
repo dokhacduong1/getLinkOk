@@ -17,8 +17,7 @@ function GetKeyUser() {
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs.map((dataMap) => dataMap.data());
     setDataSource(dataDocAllKey[0]);
-    // setCookiePhut("referrer",document.referrer,1)
-    setCookiePhien("referrer", document.referrer)
+    setCookiePhut("referrer",document.referrer,1)
     const keyDoc = doc(db, "getKey", dataDocAllKey[0].id);
     await deleteDoc(keyDoc);
   };
@@ -61,8 +60,8 @@ function GetKeyUser() {
               <h1>Key Của Bạn Là</h1>
               <Tag color="red">{dataSource?.key || "Lỗi Vui Lòng Get Lại Link"}</Tag>
               <p><strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 1 Phút</p>
-              <p> Cố Ý Sẽ Bị Thoát Ra</p>
-              <button onClick={() => { window.location.reload(); }}>ok</button>
+              <p> Qua 1 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
+            
             </>
           }
 
