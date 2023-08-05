@@ -11,7 +11,7 @@ function GetKeyUser() {
   const getKeyCollectionRef = collection(db, "getKey");
   const [dataSource, setDataSource] = useState([]);
   const fetchApi = async () => {
-    setCookiePhut("referrer",document.referrer,1)
+    
     const data = await getDocs(getKeyCollectionRef);
     const dataDocAllKey = data.docs
       .filter(
@@ -19,6 +19,7 @@ function GetKeyUser() {
       )
       .map((dataMap) => dataMap.data());
     setDataSource(dataDocAllKey[0]);
+    setCookiePhut("referrer",document.referrer,1)
   };
 
 
@@ -27,7 +28,6 @@ console.log(dataSource)
   useEffect(() => {
     const checkUser = document.referrer
     const link =["https://dilink.net/","https://beelink.life/"]
-
     const checkOk = link.some(dataSome =>dataSome === checkUser)
     console.log(checkOk)
     if (checkOk && getCookie("referrer") === "") {
