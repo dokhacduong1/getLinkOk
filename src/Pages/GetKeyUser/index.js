@@ -49,7 +49,7 @@ function GetKeyUser() {
     if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key")
       setCheckSuccess(!checkSuccess)
-      fetchApi();
+
     } else {
       messageApi.open({
         type: "error",
