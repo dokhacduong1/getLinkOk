@@ -30,7 +30,7 @@ function GetKeyUser() {
 
       fetchApi();
     }else{
-      // window.close()
+      window.close()
     }
   }, []);
 
