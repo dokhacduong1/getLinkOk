@@ -18,8 +18,7 @@ function GetKeyUser() {
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
   const [dataSource, setDataSource] = useState([]);
-  const [dataLink, setDataLink] = useState([]);
-  const [dataSelect, setDataSelect] = useState([]);
+ const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Lỗi Key Vui Lòng Get Link Lại");
   const [checkSuccess, setCheckSuccess] = useState(false);
   const fetchApiClick = async (idGame) => {
@@ -48,11 +47,7 @@ function GetKeyUser() {
   const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
-    const dataDocAllGame = dataGame.docs
-      .filter(
-        (dataFilter) => dataFilter.data().uidUser === auth?.currentUser?.uid
-      )
-      .map((dataMap) => ({
+    const dataDocAllGame = dataGame.docs.map((dataMap) => ({
         value: dataMap.data()?.id,
         label: dataMap.data()?.nameGame,
       }));
@@ -70,13 +65,12 @@ function GetKeyUser() {
     //coutLoad === 1 && checkOk && getCookie("referrer") === ""
     const loadApi = async () => {
     
-      const getGame= await getSelectGame();
+      const checkGame= await getSelectGame();
       const checkLinkOk = await checkLink()
-      const coutLoad = increaseReloadCount();
-      console.log(getGame)
-      if (coutLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
-       
-        setDataSelect(getGame);
+      const checkLoad = increaseReloadCount();
+     
+      if (checkLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
+        setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
        
