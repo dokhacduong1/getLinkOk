@@ -59,21 +59,22 @@ function GetKeyUser() {
     setDataSelect(dataDocAllGame);
 
   };
-  const fetchApi = async () => {
+  const checkLink = async () => {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
-    
-    setDataLink(dataDocAllLink)
+    const checkUser = document.referrer;
+    const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
+   return checkOk
   }
   useEffect(() => {
     //coutLoad === 1 && checkOk && getCookie("referrer") === ""
     const loadApi = async ()=>{
-      await fetchApi()
+      const checkLinkOk = await checkLink()
+      console.log(checkLinkOk)
       const coutLoad = increaseReloadCount();
-      const checkUser = document.referrer;
-      const checkOk = dataLink.some((dataSome) => dataSome === checkUser);
-      console.log(dataLink)
-      if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
+    
+      
+      if (coutLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
         fetchApi2();
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
