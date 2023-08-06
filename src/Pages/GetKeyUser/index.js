@@ -4,12 +4,22 @@ import { FloatButton } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { auth, db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
-import { getCookie, setCookiePhien, setCookiePhut } from "../../Helpers/cookie";
+import {
+  getCookie,
+  getCookie1,
+  setCookiePhien,
+  setCookiePhut,
+} from "../../Helpers/cookie";
 import {
   decodeString,
   encodeNumberToBase,
   increaseReloadCount,
 } from "../../Helpers/countWeb";
+import {
+  add5MinutesToCurrentTime,
+  parseTimeToTargetDate,
+} from "../../Helpers/dataTime";
+import Clock from "../../Components/Clock";
 
 function GetKeyUser() {
   var reloadCount = localStorage.getItem("reloadCount");
@@ -18,8 +28,8 @@ function GetKeyUser() {
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
   const [dataSource, setDataSource] = useState([]);
- const [dataSelect, setDataSelect] = useState([]);
-  const [stringNoti, setStringNoti] = useState("Lỗi Key Vui Lòng Get Link Lại");
+  const [dataSelect, setDataSelect] = useState([]);
+  const [stringNoti, setStringNoti] = useState("Đang Load...");
   const [checkSuccess, setCheckSuccess] = useState(false);
   const fetchApiClick = async (idGame) => {
     const dataKey = await getDocs(getKeyCollectionRef);
@@ -27,22 +37,29 @@ function GetKeyUser() {
     const dataDocAllKey = dataKey.docs
       .filter((dataFilter) => dataFilter.data().idGame === idGame)
       .map((dataMap) => dataMap.data());
-
+    const timeCookie = 5;
     if (dataDocAllKey.length === 0) {
-      setDataSource({ key: "Key Của Bạn Chọn Ngày Hôm Nay Đã Hết" });
-      setCookiePhut("data", "Key Của Bạn Chọn Ngày Hôm Nay Đã Hết", 5);
+      setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
+      setCookiePhut(
+        "data",
+        `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(timeCookie)}`,
+        timeCookie
+      );
     } else {
       setDataSource(dataDocAllKey[0]);
-      setCookiePhut("data", dataDocAllKey[0]?.key, 5);
+      setCookiePhut(
+        "data",
+        `${dataDocAllKey[0]?.key}-${add5MinutesToCurrentTime(timeCookie)}`,
+        timeCookie
+      );
     }
 
-   
     if (dataDocAllKey.length > 0) {
       const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
       await deleteDoc(keyDoc);
     }
     setCheckSuccess(false);
-    window.location.href = "https://www.vuitool.online/"
+    window.location.href = "https://www.vuitool.online/";
   };
 
   // Tăng số lượng tải lại sau mỗi lần load
@@ -51,50 +68,58 @@ function GetKeyUser() {
     const dataGame = await getDocs(getGameCollectionRef);
 
     const dataDocAllGame = dataGame.docs.map((dataMap) => ({
-        value: dataMap.data()?.id,
-        label: dataMap.data()?.nameGame,
-      }));
-    return dataDocAllGame
-
+      value: dataMap.data()?.id,
+      label: dataMap.data()?.nameGame,
+    }));
+    return dataDocAllGame;
   };
+
   const checkLink = async () => {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
     const checkUser = document.referrer;
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
-    return checkOk
-  }
+    return checkOk;
+  };
   useEffect(() => {
     //checkLoad === 1 && checkLinkOk && getCookie("data") === ""
     const loadApi = async () => {
-    
-      const checkGame= await getSelectGame();
-      const checkLinkOk = await checkLink()
+      const checkGame = await getSelectGame();
+      const checkLinkOk = await checkLink();
       const checkLoad = increaseReloadCount();
-     
+
       if (checkLoad === 1 && checkLinkOk && getCookie("data") === "") {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
-        // 
-       
+        //
       } else {
-        if(getCookie("data") !== ""){
-         setDataSource({key:getCookie("data")}) 
-        }
-        messageApi.open({
-          type: "error",
-          content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
-        });
-      }
-    }
-    loadApi()
+        if (getCookie("data") !== "") {
+          const arrayTime = getCookie("data").split("-") || getCookie("data");
 
+          const targetTime2 = parseTimeToTargetDate(arrayTime[1]);
+          arrayTime.push(targetTime2);
+
+          setDataSource(arrayTime);
+        }else{
+          
+          messageApi.open({
+            type: "error",
+            content: `Bạn Đã Cố Truy Cập Trái Phép Không Theo Tuần Tự Vui Lòng Get Link Lại!`,
+          });
+          setStringNoti("Vui Lòng Get Link Lại");
+        }
+       
+      }
+    };
+    loadApi();
   }, []);
+  const targetTime = new Date();
+  targetTime.setMinutes(targetTime.getMinutes() + 5);
 
   const handleClick = async (value) => {
     fetchApiClick(value);
-    setCheckSuccess(false)
+    setCheckSuccess(false);
   };
 
   return (
@@ -117,12 +142,23 @@ function GetKeyUser() {
               )}
 
               <h1>Key Của Bạn Là</h1>
-              <Tag color="red">{dataSource?.key || stringNoti}</Tag>
+              <Tag color="red">{dataSource[0] || stringNoti}</Tag>
+              {dataSource.length > 1 && (
+                <>
+                  <p>
+                    <Clock targetTime={dataSource[2]} />
+                  </p>
+                </>
+              )}
               <p>
                 <strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 5 Phút
               </p>
               <p> Qua 5 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
-              <p> Key Sẽ Luôn Được Lưu Trong Vòng <strong>5 Phút</strong> không thể lấy thêm key game mới trong thời gian này</p>
+              <p>
+                {" "}
+                Key Sẽ Luôn Được Lưu Trong Vòng <strong>5 Phút</strong> không
+                thể lấy thêm key game mới trong thời gian này
+              </p>
             </>
           )}
         </Card>

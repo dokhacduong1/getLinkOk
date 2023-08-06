@@ -13,6 +13,16 @@ export function getCookie(cname) {
     }
     return "";
   }
+ export function getCookie1(name) {
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  }
   // Hết Hàm lấy cookie
   
   // Hàm tạo cookie
@@ -22,12 +32,14 @@ export function getCookie(cname) {
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
   }
+
   // Hết Hàm tạo cookie
   export function setCookiePhut(cname, cvalue, exminutes) {
     var d = new Date();
     d.setTime(d.getTime() + exminutes * 60 * 1000); // Chuyển từ phút sang mili giây
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
+    return expires
   }
   export function setCookiePhien(cname, cvalue) {
    

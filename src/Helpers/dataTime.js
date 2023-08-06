@@ -76,3 +76,38 @@ export const sumArrayDate = (dataDocAll) => {
   });
 };
 
+export function add5MinutesToCurrentTime(time) {
+  const currentTime = new Date();
+  const updatedTime = new Date(currentTime.getTime() + time * 60 * 1000); // 5 phút được tính bằng 5 * 60.000 miligiây
+
+  const updatedMinutes = updatedTime.getMinutes();
+  const updatedHours = updatedTime.getHours();
+
+  // Xác định AM hoặc PM dựa vào giờ hiện tại
+  const period = updatedHours >= 12 ? 'PM' : 'AM';
+
+  // Định dạng lại giờ (đảm bảo định dạng 12 giờ) và phút (đảm bảo 2 chữ số)
+  const formattedHours = updatedHours % 12 === 0 ? 12 : updatedHours % 12;
+  const formattedMinutes = updatedMinutes < 10 ? `0${updatedMinutes}` : updatedMinutes;
+  const formattedSeconds = updatedTime.getSeconds() < 10 ? `0${updatedTime.getSeconds()}` : updatedTime.getSeconds();
+  const resultTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${period}`;
+  return resultTime;
+}
+
+export function parseTimeToTargetDate(timeString) {
+  
+  const [time, period] = timeString.split(" ");
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+  let targetHours = hours;
+
+  if (period === "PM" && hours !== 12) {
+    targetHours += 12;
+  } else if (period === "AM" && hours === 12) {
+    targetHours = 0;
+  }
+
+  const targetDate = new Date();
+  targetDate.setHours(targetHours, minutes, seconds, 0);
+
+  return targetDate;
+}

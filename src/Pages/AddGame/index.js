@@ -12,7 +12,7 @@ function AddGame() {
   
   const handleFinish = async (infoForm) => {
     const newDocRef = doc(getGameCollectionRef);
-    console.log(infoForm)
+   
     const objectNew = {
         nameGame: infoForm.nameGame,
         uidUser: auth?.currentUser?.uid,
