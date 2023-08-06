@@ -73,7 +73,7 @@ function GetKeyUser() {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
-       
+        window.location.href = "https://www.vuitool.online/"
        
       } else {
         messageApi.open({
