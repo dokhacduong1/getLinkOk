@@ -4,13 +4,9 @@ import "./GetKeyUser.scss";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
+import { getCookie, setCookiePhut } from "../../Helpers/cookie";
 import {
-  getCookie,
-
-  setCookiePhut,
-} from "../../Helpers/cookie";
-import {
-
+  encodeNumberToBase,
   increaseReloadCount,
 } from "../../Helpers/countWeb";
 import {
@@ -18,9 +14,12 @@ import {
   parseTimeToTargetDate,
 } from "../../Helpers/dataTime";
 import Clock from "../../Components/Clock";
+import {
+  decryptStringNami,
+  encryptStringNami,
+} from "../../Helpers/decodeString";
 
 function GetKeyUser() {
-
   const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const getGameCollectionRef = collection(db, "gameManagement");
@@ -33,7 +32,9 @@ function GetKeyUser() {
     const dataKey = await getDocs(getKeyCollectionRef);
     const dataGame = await getDocs(getGameCollectionRef);
 
-    const dataDocAllGame = dataGame.docs.filter((dataFilter) => dataFilter.data().id === idGame).map(dataMap => dataMap.data())[0]
+    const dataDocAllGame = dataGame.docs
+      .filter((dataFilter) => dataFilter.data().id === idGame)
+      .map((dataMap) => dataMap.data())[0];
 
     const dataDocAllKey = dataKey.docs
       .filter((dataFilter) => dataFilter.data().idGame === idGame)
@@ -42,17 +43,22 @@ function GetKeyUser() {
     if (dataDocAllKey.length === 0) {
       setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
       setCookiePhut(
-        "data",
-        `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(
-          timeCookie
-        )}`,
+        "_Error",
+        encryptStringNami(
+          `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(
+            timeCookie
+          )}`
+        ),
         timeCookie
       );
     } else {
       setDataSource(dataDocAllKey[0]);
       setCookiePhut(
-        "data",
-        `${dataDocAllKey[0]?.key} & ${dataDocAllGame?.nameGame}-${add5MinutesToCurrentTime(timeCookie)}`,
+        "_Error",
+        encryptStringNami(`${dataDocAllKey[0]?.key} & ${dataDocAllGame?.nameGame
+          }-${add5MinutesToCurrentTime(timeCookie)}`)
+        ,
+
         timeCookie
       );
     }
@@ -64,7 +70,7 @@ function GetKeyUser() {
     setCheckSuccess(false);
     window.location.href = "https://www.vuitool.online/";
   };
-
+ 
   const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
@@ -96,8 +102,9 @@ function GetKeyUser() {
         setCheckSuccess(!checkSuccess);
         //
       } else {
-        if (getCookie("data") !== "") {
-          const arrayTime = getCookie("data").split("-") || getCookie("data");
+        if (getCookie("_Error") !== "") {
+          const helloHai = decryptStringNami(getCookie("_Error"))
+          const arrayTime = helloHai.split("-") || getCookie("_Error");
 
           const targetTime2 = parseTimeToTargetDate(arrayTime[1]);
           arrayTime.push(targetTime2);
@@ -145,9 +152,7 @@ function GetKeyUser() {
               <Tag color="red">{dataSource[0] || stringNoti}</Tag>
               {dataSource.length > 1 && (
                 <>
-                  
-                    <Clock targetTime={dataSource[2]} />
-                  
+                  <Clock targetTime={dataSource[2]} />
                 </>
               )}
               <p>
