@@ -67,22 +67,26 @@ function GetKeyUser() {
   }
   useEffect(() => {
     //coutLoad === 1 && checkOk && getCookie("referrer") === ""
-    fetchApi()
-    const coutLoad = increaseReloadCount();
-    const checkUser = document.referrer;
-    const checkOk = dataLink.some((dataSome) => dataSome === checkUser);
-    console.log(dataLink)
-    if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
-      fetchApi2();
-      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
-      setCheckSuccess(!checkSuccess);
-    } else {
-      messageApi.open({
-        type: "error",
-        content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
-      });
+    const loadApi = async ()=>{
+      await fetchApi()
+      const coutLoad = increaseReloadCount();
+      const checkUser = document.referrer;
+      const checkOk = dataLink.some((dataSome) => dataSome === checkUser);
+      console.log(dataLink)
+      if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
+        fetchApi2();
+        setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
+        setCheckSuccess(!checkSuccess);
+      } else {
+        messageApi.open({
+          type: "error",
+          content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
+        });
+      }
     }
-  }, [dataLink]);
+    loadApi()
+   
+  }, []);
 
   const handleClick = async (value) => {
     fetchApiClick(value);
