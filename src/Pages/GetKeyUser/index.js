@@ -56,7 +56,7 @@ function GetKeyUser() {
         value: dataMap.data()?.id,
         label: dataMap.data()?.nameGame,
       }));
-    
+    return dataDocAllGame
 
   };
   const checkLink = async () => {
