@@ -73,9 +73,9 @@ function GetKeyUser() {
       const getGame= await getSelectGame();
       const checkLinkOk = await checkLink()
       const coutLoad = increaseReloadCount();
-      
+      console.log(getGame)
       if (coutLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
-        console.log(getGame)
+       
         setDataSelect(getGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
