@@ -1,18 +1,16 @@
 import { Card, Select, Tag, message } from "antd";
 import "./GetKeyUser.scss";
-import { FloatButton } from "antd";
+
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-import { auth, db } from "../../Config/Firebase";
+import { db } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
 import {
   getCookie,
-  getCookie1,
-  setCookiePhien,
+
   setCookiePhut,
 } from "../../Helpers/cookie";
 import {
-  decodeString,
-  encodeNumberToBase,
+
   increaseReloadCount,
 } from "../../Helpers/countWeb";
 import {
@@ -22,7 +20,7 @@ import {
 import Clock from "../../Components/Clock";
 
 function GetKeyUser() {
-  var reloadCount = localStorage.getItem("reloadCount");
+
   const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const getGameCollectionRef = collection(db, "gameManagement");
@@ -33,6 +31,9 @@ function GetKeyUser() {
   const [checkSuccess, setCheckSuccess] = useState(false);
   const fetchApiClick = async (idGame) => {
     const dataKey = await getDocs(getKeyCollectionRef);
+    const dataGame = await getDocs(getGameCollectionRef);
+
+    const dataDocAllGame = dataGame.docs.filter((dataFilter) => dataFilter.data().id === idGame).map(dataMap => dataMap.data())[0]
 
     const dataDocAllKey = dataKey.docs
       .filter((dataFilter) => dataFilter.data().idGame === idGame)
@@ -42,14 +43,16 @@ function GetKeyUser() {
       setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
       setCookiePhut(
         "data",
-        `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(timeCookie)}`,
+        `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(
+          timeCookie
+        )}`,
         timeCookie
       );
     } else {
       setDataSource(dataDocAllKey[0]);
       setCookiePhut(
         "data",
-        `${dataDocAllKey[0]?.key}-${add5MinutesToCurrentTime(timeCookie)}`,
+        `${dataDocAllKey[0]?.key} & ${dataDocAllGame?.nameGame}-${add5MinutesToCurrentTime(timeCookie)}`,
         timeCookie
       );
     }
@@ -62,8 +65,6 @@ function GetKeyUser() {
     window.location.href = "https://www.vuitool.online/";
   };
 
-  // Tăng số lượng tải lại sau mỗi lần load
-
   const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
@@ -73,7 +74,7 @@ function GetKeyUser() {
     }));
     return dataDocAllGame;
   };
-
+  //lấy link
   const checkLink = async () => {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
@@ -86,9 +87,10 @@ function GetKeyUser() {
     const loadApi = async () => {
       const checkGame = await getSelectGame();
       const checkLinkOk = await checkLink();
+      //Check xem có load lại web hay không
       const checkLoad = increaseReloadCount();
 
-      if (checkLoad === 1 && checkLinkOk && getCookie("data") === "") {
+      if (checkLoad === 1) {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
@@ -101,15 +103,13 @@ function GetKeyUser() {
           arrayTime.push(targetTime2);
 
           setDataSource(arrayTime);
-        }else{
-          
+        } else {
           messageApi.open({
             type: "error",
             content: `Bạn Đã Cố Truy Cập Trái Phép Không Theo Tuần Tự Vui Lòng Get Link Lại!`,
           });
           setStringNoti("Vui Lòng Get Link Lại");
         }
-       
       }
     };
     loadApi();
@@ -145,9 +145,9 @@ function GetKeyUser() {
               <Tag color="red">{dataSource[0] || stringNoti}</Tag>
               {dataSource.length > 1 && (
                 <>
-                  <p>
+                  
                     <Clock targetTime={dataSource[2]} />
-                  </p>
+                  
                 </>
               )}
               <p>
