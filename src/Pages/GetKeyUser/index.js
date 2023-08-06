@@ -70,7 +70,7 @@ function GetKeyUser() {
     const coutLoad = increaseReloadCount();
     const checkUser = document.referrer;
     const checkOk = dataLink.some((dataSome) => dataSome === checkUser);
-    console.log(checkOk)
+    console.log(dataLink)
     if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
       fetchApi2();
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
