@@ -90,7 +90,7 @@ function GetKeyUser() {
       //Check xem có load lại web hay không
       const checkLoad = increaseReloadCount();
 
-      if (checkLoad === 1) {
+      if (checkLoad === 1 && checkLinkOk && getCookie("data") === "") {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
