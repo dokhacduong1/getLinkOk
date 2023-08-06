@@ -62,6 +62,7 @@ function GetKeyUser() {
   const fetchApi = async () => {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
+    console.log(dataDocAllLink)
     setDataLink(dataDocAllLink)
   }
   useEffect(() => {
@@ -70,7 +71,7 @@ function GetKeyUser() {
     const coutLoad = increaseReloadCount();
     const checkUser = document.referrer;
     const checkOk = dataLink.some((dataSome) => dataSome === checkUser);
-    console.log(dataLink)
+   
     if (coutLoad === 1 && checkOk && getCookie("referrer") === "") {
       fetchApi2();
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
