@@ -45,7 +45,7 @@ function GetKeyUser() {
 
   // Tăng số lượng tải lại sau mỗi lần load
 
-  const fetchApi2 = async () => {
+  const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
     const dataDocAllGame = dataGame.docs
@@ -56,7 +56,7 @@ function GetKeyUser() {
         value: dataMap.data()?.id,
         label: dataMap.data()?.nameGame,
       }));
-    setDataSelect(dataDocAllGame);
+    
 
   };
   const checkLink = async () => {
@@ -69,13 +69,17 @@ function GetKeyUser() {
   useEffect(() => {
     //coutLoad === 1 && checkOk && getCookie("referrer") === ""
     const loadApi = async () => {
-      await fetchApi2();
+    
+      const getGame= await getSelectGame();
       const checkLinkOk = await checkLink()
       const coutLoad = increaseReloadCount();
+      
       if (coutLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
 
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
+        setDataSelect(getGame);
+       
       } else {
         messageApi.open({
           type: "error",
