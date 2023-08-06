@@ -30,16 +30,19 @@ function GetKeyUser() {
 
     if (dataDocAllKey.length === 0) {
       setDataSource({ key: "Key Ngày Hôm Nay Đã Hết" });
+      setCookiePhut("data", "Key Ngày Hôm Nay Đã Hết", 5);
     } else {
       setDataSource(dataDocAllKey[0]);
+      setCookiePhut("data", dataDocAllKey[0]?.key, 5);
     }
 
-    setCookiePhut("referrer", document.referrer, 5);
+   
     if (dataDocAllKey.length > 0) {
       const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
       await deleteDoc(keyDoc);
     }
     setCheckSuccess(false);
+    window.location.href = "https://www.vuitool.online/"
   };
 
   // Tăng số lượng tải lại sau mỗi lần load
@@ -62,20 +65,23 @@ function GetKeyUser() {
     return checkOk
   }
   useEffect(() => {
-    //coutLoad === 1 && checkOk && getCookie("referrer") === ""
+    //checkLoad === 1 && checkLinkOk && getCookie("data") === ""
     const loadApi = async () => {
     
       const checkGame= await getSelectGame();
       const checkLinkOk = await checkLink()
       const checkLoad = increaseReloadCount();
      
-      if (checkLoad === 1 && checkLinkOk && getCookie("referrer") === "") {
+      if (checkLoad === 1 && checkLinkOk && getCookie("data") === "") {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
-        window.location.href = "https://www.vuitool.online/"
+        // 
        
       } else {
+        if(getCookie("data") !== ""){
+         setDataSource({key:getCookie("data")}) 
+        }
         messageApi.open({
           type: "error",
           content: `Bạn Đã Cố Truy Cập Hoặc Đã Lấy Key Rồi Vui Lòng Ấn Lại Link Rút Gọn Và Thử Lại`,
@@ -116,6 +122,7 @@ function GetKeyUser() {
                 <strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 5 Phút
               </p>
               <p> Qua 5 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
+              <p> Key Sẽ Luôn Được Lưu Trong Vòng <strong>5 Phút</strong> không thể lấy thêm key game mới trong thời gian này</p>
             </>
           )}
         </Card>
