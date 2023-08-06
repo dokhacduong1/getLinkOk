@@ -1,6 +1,6 @@
 import "./SliderHome.scss"
 import {  Menu } from 'antd';
-import { ShoppingCartOutlined,KeyOutlined,ConsoleSqlOutlined,ShopOutlined,UserOutlined,StockOutlined} from '@ant-design/icons';
+import { LinkOutlined,KeyOutlined,ConsoleSqlOutlined,AndroidOutlined,UserOutlined,StockOutlined} from '@ant-design/icons';
 import { Link, useLocation } from "react-router-dom";
 function SliderHome(){
   const location =useLocation()
@@ -16,11 +16,22 @@ function SliderHome(){
       }
     const items = [
         getItem('/',<Link to="home">Trang Chủ</Link> ,<KeyOutlined />),
+        getItem('shortenedLink',<span className="layout__slider-item">Liên Kết Rút Gọn</span>, <span className="layout__slider-item"><LinkOutlined /></span>,[
+          getItem('/add-link',<Link to="add-link">Thêm Liên Kết</Link>,null),
+          getItem('/link-management',<Link to="link-management">Quản Lý Liên Kết</Link>,null),
+        
+        ]),
+        getItem('addGame',<span className="layout__slider-item">Game</span>, <span className="layout__slider-item"><AndroidOutlined /></span>,[
+          getItem('/add-game',<Link to="add-game">Thêm Game</Link>,null),
+          getItem('/game-management',<Link to="game-management">Quản Lý Game</Link>,null),
+        
+        ]),
         getItem('addKey',<span className="layout__slider-item">Key</span>, <span className="layout__slider-item"><ConsoleSqlOutlined /></span>,[
           getItem('/add-key',<Link to="add-key">Thêm Key</Link>,null),
           getItem('/key-management',<Link to="key-management">Quản Lý Key</Link>,null),
         
         ]),
+       
       
       ];
     return(

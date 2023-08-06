@@ -4,15 +4,33 @@ import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { auth, db } from "../../Config/Firebase";
 import "./AddKey.scss";
 import { encodeNumberToBase } from "../../Helpers/countWeb";
+import { useEffect, useState } from "react";
 function AddKey() {
   const { TextArea } = Input;
   const getKeyCollectionRef = collection(db, "getKey");
+  const getGameCollectionRef = collection(db, "gameManagement");
   const [messageApi, contextHolder] = message.useMessage();
+  const [dataSource, setDataSource] = useState([]);
   const [form] = Form.useForm();
-  
+
+  const fetchApi = async () => {
+    const data = await getDocs(getGameCollectionRef);
+    const dataDocAllGame = data.docs
+      .filter(
+        (dataFilter) => dataFilter.data().uidUser === auth?.currentUser?.uid
+      )
+      .map((dataMap) => ({value:dataMap.data()?.id,label:dataMap.data()?.nameGame}));
+    setDataSource(dataDocAllGame);
+    
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, []);
+
   const handleFinish = async (infoForm) => {
     const listKey = infoForm.key.split("\n");
-
+   
     listKey.map(async (dataMap) => {
        
       const newDocRef = doc(getKeyCollectionRef);
@@ -20,7 +38,7 @@ function AddKey() {
         key: dataMap,
         uidUser: auth?.currentUser?.uid,
         id: newDocRef.id,
-        nameGame:infoForm.nameGame
+        idGame:infoForm?.idGame
       };
       
       try {
@@ -45,7 +63,7 @@ function AddKey() {
         <Form onFinish={handleFinish} layout="vertical" form={form}>
           <Form.Item
             className="search__welcome-item"
-            name="nameGame"
+            name="idGame"
             rules={[
               {
                 required: true,
@@ -54,11 +72,7 @@ function AddKey() {
             ]}
           >
             <Select
-              options={[
-                { value: "zingspeed", label: "Zing Speed" },
-                { value: "freefire", label: "Free Fire" },
-                { value: "playtogether", label: "Play Together" },
-              ]}
+              options={dataSource}
               style={{ width: 170 }}
               placeholder="Tìm Kiếm"
               className="search__welcome-form-select"

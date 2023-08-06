@@ -9,6 +9,10 @@ import AddKey from "../Pages/AddKey";
 import KeyManagement from "../Pages/KeyManagement";
 import HelloWord from "../Pages/HelloWord/Index";
 import GetKeyUser from "../Pages/GetKeyUser";
+import AddGame from "../Pages/AddGame";
+import GameManagement from "../Pages/GameManagement";
+import AddLink from "../Pages/AddLink";
+import LinkManagement from "../Pages/LinkManagement";
 
 
 
@@ -47,6 +51,22 @@ export const routes = [
           {
             path: "key-management",
             element: <KeyManagement />,
+          },
+          {
+            path: "add-game",
+            element: <AddGame />,
+          },
+          {
+            path: "game-management",
+            element: <GameManagement />,
+          },
+          {
+            path: "add-link",
+            element: <AddLink />,
+          },
+          {
+            path: "link-management",
+            element: <LinkManagement />,
           },
           {
             path: "home",
