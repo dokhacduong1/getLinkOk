@@ -1,18 +1,41 @@
 import { Tag } from 'antd';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
+import { db } from '../../Config/Firebase';
+import { getIpLocal } from '../../Services/IpApi';
 
 
 const Clock = ({ targetTime }) => {
+  const getKeyTimeUserCollectionRef = collection(db, "keyTime");
     const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
 
     useEffect(() => {
       const interval = setInterval(() => {
         setTimeRemaining(calculateTimeRemaining());
+        
       }, 1000);
   
       return () => clearInterval(interval);
     }, []);
   
+    if(timeRemaining === 0){
+      const DeleteOk = async ()=>{
+        const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
+        const responseIp = await getIpLocal();
+      
+        const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === responseIp.ip).map(dataMap=>dataMap.data());
+
+        const keyTimeDoc = doc(db, "keyTime", dataDocAllKeyTime[0]?.id);
+        try{
+          await deleteDoc(keyTimeDoc);
+          window.location.href = "https://www.vuitool.online/";
+        }catch{
+
+        }
+      }
+      DeleteOk()
+     
+    }
     function calculateTimeRemaining() {
       const now = new Date();
       const target = new Date(targetTime);

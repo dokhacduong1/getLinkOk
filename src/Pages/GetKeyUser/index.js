@@ -11,10 +11,7 @@ import {
 import { db, db2 } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
 import { getCookie, setCookiePhut } from "../../Helpers/cookie";
-import {
-  encodeNumberToBase,
-  increaseReloadCount,
-} from "../../Helpers/countWeb";
+import { increaseReloadCount } from "../../Helpers/countWeb";
 import {
   add5MinutesToCurrentTime,
   parseTimeToTargetDate,
@@ -31,15 +28,19 @@ function GetKeyUser() {
   const getKeyCollectionRef = collection(db, "getKey");
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
-  const getBlockUserCollectionRef = collection(db2, "blockUser");
+
+  const getKeyTimeUserCollectionRef = collection(db, "keyTime");
   const [dataSource, setDataSource] = useState([]);
-  const [dataIp, setDataIp] = useState([]);
+
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
   const [checkSuccess, setCheckSuccess] = useState(false);
+  //Hàm này sẽ xử lý khi người dùng chọn game
   const fetchApiClick = async (idGame) => {
     const dataKey = await getDocs(getKeyCollectionRef);
     const dataGame = await getDocs(getGameCollectionRef);
+    const newDocRefKeyTime = doc(getKeyTimeUserCollectionRef);
+    const responseIp = await getIpLocal();
 
     const dataDocAllGame = dataGame.docs
       .filter((dataFilter) => dataFilter.data().id === idGame)
@@ -50,25 +51,31 @@ function GetKeyUser() {
       .map((dataMap) => dataMap.data());
     const timeCookie = 5;
     if (dataDocAllKey.length === 0) {
+      const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
+        }-${add5MinutesToCurrentTime(timeCookie)}`
+      const objectNew = {
+        ip: responseIp.ip,
+        id: newDocRefKeyTime.id,
+        data: dataOk
+      };
+      try {
+        await setDoc(newDocRefKeyTime, objectNew);
+      } catch { }
       setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
-      setCookiePhut(
-        "_Error",
-        encryptStringNami(
-          `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
-          }-${add5MinutesToCurrentTime(timeCookie)}`
-        ),
-        timeCookie
-      );
+
     } else {
+      const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
+        }-${add5MinutesToCurrentTime(timeCookie)}`
+      const objectNew = {
+        ip: responseIp.ip,
+        id: newDocRefKeyTime.id,
+        data: dataOk
+      };
+      try {
+        await setDoc(newDocRefKeyTime, objectNew);
+      } catch { }
       setDataSource(dataDocAllKey[0]);
-      setCookiePhut(
-        "_Error",
-        encryptStringNami(
-          `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
-          }-${add5MinutesToCurrentTime(timeCookie)}`
-        ),
-        timeCookie
-      );
+
     }
 
     if (dataDocAllKey.length > 0) {
@@ -76,9 +83,11 @@ function GetKeyUser() {
       await deleteDoc(keyDoc);
     }
     setCheckSuccess(false);
+    //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
     window.location.href = "https://www.vuitool.online/";
   };
 
+  //Hàm Này Lôi Ra Cái Dữ Liệu Tên game Gán Cho Seleect
   const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
@@ -88,7 +97,7 @@ function GetKeyUser() {
     }));
     return dataDocAllGame;
   };
-  //lấy link
+  //Hàm Này Check Link Trước Đó Xem Có Phải Link Chỉ Định Hay Không
   const checkLink = async () => {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
@@ -96,88 +105,52 @@ function GetKeyUser() {
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
     return checkOk;
   };
-  const checkIpAllUser = async (ip) => {
-    const dataIp = await getDocs(getBlockUserCollectionRef);
-    const dataDocAllIp = dataIp.docs.some(
-      (dataEvery) => dataEvery.data().ip === ip
-    );
-    return dataDocAllIp;
-  };
+
+  const getDataKey = async (ip) => {
+    const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
+    const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === ip).map(dataMap => dataMap.data());
+    return dataDocAllKeyTime
+  }
   useEffect(() => {
-    //checkLoad === 1 && checkLinkOk && getCookie("data") === ""
+    //checkLoad === 1  && checkLinkOk && getCookie("data") === ""
     const loadApi = async () => {
       const checkGame = await getSelectGame();
       const checkLinkOk = await checkLink();
       //Check xem có load lại web hay không
       const checkLoad = increaseReloadCount();
       const responseIp = await getIpLocal();
-      const checkIp = await checkIpAllUser(responseIp.ip);
+      const dataKeyTime = await getDataKey(responseIp.ip)
       if (
-        checkLoad === 1 &&
-        !checkIp &&
-        checkLinkOk &&
-        getCookie("data") === ""
+        !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
       ) {
+
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
         //
       } else {
-        if (getCookie("_Error") !== "") {
-          const helloHai = decryptStringNami(getCookie("_Error"));
-          const arrayTime = helloHai.split("-") || getCookie("_Error");
-          if (checkIp) {
-            console.log("ok")
-            messageApi.open({
-              type: "error",
-              content: `Bạn Đã Bị Cấm!`,
-            });
-            setStringNoti("Bạn Đã Bị Cấm Vào Web Khi Có Ý Đồ Bất Chính");
-          }
-          else if (arrayTime.length > 1) {
-            const targetTime2 = parseTimeToTargetDate(arrayTime[1]);
-            arrayTime.push(targetTime2);
-            setDataSource(arrayTime);
-          } else {
-            //Đoạn này sẽ block ip khi cố tình chỉnh sửa
-
-            const newDocRefBlockUser = doc(getBlockUserCollectionRef);
-            const objectNew = {
-              ip: responseIp.ip,
-              id: newDocRefBlockUser.id,
-            };
-            try {
-              await setDoc(newDocRefBlockUser, objectNew);
-            } catch { }
-            messageApi.open({
-              type: "error",
-              content: `Vui Lòng Đừng Chỉnh Linh Tinh!`,
-            });
-            setStringNoti("Vui Lòng Không Có Ý Đồ Bất Chính");
-          }
-        }
-        else if (checkIp) {
-
-          messageApi.open({
-            type: "error",
-            content: `Bạn Đã Bị Cấm!`,
-          });
-          setStringNoti("Bạn Đã Bị Cấm Vào Web Khi Có Ý Đồ Bất Chính");
+        if (dataKeyTime.length > 0) {
+          const arrayTime = dataKeyTime[0].data.split("-") || ""
+          const targetTime = parseTimeToTargetDate(arrayTime[1]);
+          arrayTime.push(targetTime);
+          setDataSource(arrayTime);
         }
         else {
-          setStringNoti("Vui Lòng Get Link Và Thử Lại");
           messageApi.open({
             type: "error",
             content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
           });
+          setStringNoti("Vui Lòng Get Link Và Thử Lại");
         }
       }
+
+
+
     };
     loadApi();
   }, []);
 
-  const targetTime = new Date();
-  targetTime.setMinutes(targetTime.getMinutes() + 5);
+
 
   const handleClick = async (value) => {
     fetchApiClick(value);
