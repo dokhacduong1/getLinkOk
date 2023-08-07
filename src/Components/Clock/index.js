@@ -25,7 +25,7 @@ const Clock = ({ targetTime }) => {
       
         const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === responseIp.ip).map(dataMap=>dataMap.data());
 
-        const keyTimeDoc = doc(db, "keyTime", dataDocAllKeyTime[0]?.id);
+        const keyTimeDoc = doc(db2, "keyTime", dataDocAllKeyTime[0]?.id);
         try{
           await deleteDoc(keyTimeDoc);
           window.location.href = "https://www.vuitool.online/";
