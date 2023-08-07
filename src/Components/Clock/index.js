@@ -1,12 +1,12 @@
 import { Tag } from 'antd';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
-import { db } from '../../Config/Firebase';
+import { db, db2 } from '../../Config/Firebase';
 import { getIpLocal } from '../../Services/IpApi';
 
 
 const Clock = ({ targetTime }) => {
-  const getKeyTimeUserCollectionRef = collection(db, "keyTime");
+  const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
     const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
 
     useEffect(() => {

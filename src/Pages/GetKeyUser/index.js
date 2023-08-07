@@ -29,7 +29,7 @@ function GetKeyUser() {
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
 
-  const getKeyTimeUserCollectionRef = collection(db, "keyTime");
+  const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState([]);
 
   const [dataSelect, setDataSelect] = useState([]);
@@ -77,7 +77,7 @@ function GetKeyUser() {
       setDataSource(dataDocAllKey[0]);
 
     }
-
+    //Mỗi lần dùng sẽ xóa key này
     if (dataDocAllKey.length > 0) {
       const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
       await deleteDoc(keyDoc);
@@ -105,7 +105,7 @@ function GetKeyUser() {
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
     return checkOk;
   };
-
+  //Check xem key trên server ip này lấy chưa
   const getDataKey = async (ip) => {
     const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
     const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === ip).map(dataMap => dataMap.data());
@@ -121,7 +121,7 @@ function GetKeyUser() {
       const responseIp = await getIpLocal();
       const dataKeyTime = await getDataKey(responseIp.ip)
       if (
-        !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
+        !dataKeyTime.length > 0
       ) {
 
         setDataSelect(checkGame);
