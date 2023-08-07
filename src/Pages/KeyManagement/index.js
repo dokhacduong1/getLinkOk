@@ -11,20 +11,36 @@ import {
 import "./KeyManagement.scss";
 function KeyManagement() {
   const getKeyCollectionRef = collection(db, "getKey");
+  const getGameCollectionRef = collection(db, "gameManagement");
   const [dataSource, setDataSource] = useState([]);
   const [tempDataSource, setTempDataSource] = useState([]);
   const [deleteId, setDeleteId] = useState([])
   const fetchApi = async () => {
-    const data = await getDocs(getKeyCollectionRef);
-    const dataDocAllKey = data.docs
+    const dataKey = await getDocs(getKeyCollectionRef);
+    const dataGame = await getDocs(getGameCollectionRef);
+    const dataDocAllKey = dataKey.docs
       .filter(
         (dataFilter) => dataFilter.data().uidUser === auth?.currentUser?.uid
       )
       .map((dataMap) => dataMap.data());
-    setDataSource(dataDocAllKey);
-    setTempDataSource(dataDocAllKey);
+    const dataDocAllGame = dataGame.docs
+      .filter(
+        (dataFilter) => dataFilter.data().uidUser === auth?.currentUser?.uid
+      )
+      .map((dataMap) => dataMap.data());
+      
+     const dataConvert =dataDocAllKey.map(dataMap=>{
+        const dataFind = dataDocAllGame.find(dataFind=>dataFind?.id === dataMap?.idGame)
+        return {
+          ...dataMap,
+          nameGame:dataFind?.nameGame
+        }
+     })
+    
+    setDataSource(dataConvert);
+    setTempDataSource(dataConvert);
   };
-
+  
   useEffect(() => {
     fetchApi();
   }, []);
@@ -62,8 +78,18 @@ function KeyManagement() {
       value: "key",
       label: "Tên Key",
     },
+    {
+      value: "nameGame",
+      label: "Tên Game",
+    },
   ];
   const columns = [
+    {
+      title: "Tên Game",
+      dataIndex: "nameGame",
+      key: "nameGame",
+      align: "center",
+    },
     {
       title: "Key",
       dataIndex: "key",

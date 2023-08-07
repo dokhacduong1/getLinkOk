@@ -59,6 +59,9 @@
 }
 @media (max-width: 992.9px) {
   .header {
+    &__bar {
+      display: block;
+    }
     &__logo {
       &-img {
         img {

@@ -1,8 +1,14 @@
 import { Card, Select, Tag, message } from "antd";
 import "./GetKeyUser.scss";
 
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-import { db } from "../../Config/Firebase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
+import { db, db2 } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
 import { getCookie, setCookiePhut } from "../../Helpers/cookie";
 import {
@@ -18,13 +24,16 @@ import {
   decryptStringNami,
   encryptStringNami,
 } from "../../Helpers/decodeString";
+import { getIpLocal } from "../../Services/IpApi";
 
 function GetKeyUser() {
   const [messageApi, contextHolder] = message.useMessage();
   const getKeyCollectionRef = collection(db, "getKey");
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
+  const getBlockUserCollectionRef = collection(db2, "blockUser");
   const [dataSource, setDataSource] = useState([]);
+  const [dataIp, setDataIp] = useState([]);
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
   const [checkSuccess, setCheckSuccess] = useState(false);
@@ -45,9 +54,8 @@ function GetKeyUser() {
       setCookiePhut(
         "_Error",
         encryptStringNami(
-          `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết-${add5MinutesToCurrentTime(
-            timeCookie
-          )}`
+          `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
+          }-${add5MinutesToCurrentTime(timeCookie)}`
         ),
         timeCookie
       );
@@ -55,10 +63,10 @@ function GetKeyUser() {
       setDataSource(dataDocAllKey[0]);
       setCookiePhut(
         "_Error",
-        encryptStringNami(`${dataDocAllKey[0]?.key} & ${dataDocAllGame?.nameGame
-          }-${add5MinutesToCurrentTime(timeCookie)}`)
-        ,
-
+        encryptStringNami(
+          `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
+          }-${add5MinutesToCurrentTime(timeCookie)}`
+        ),
         timeCookie
       );
     }
@@ -70,7 +78,7 @@ function GetKeyUser() {
     setCheckSuccess(false);
     window.location.href = "https://www.vuitool.online/";
   };
- 
+
   const getSelectGame = async () => {
     const dataGame = await getDocs(getGameCollectionRef);
 
@@ -88,6 +96,13 @@ function GetKeyUser() {
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
     return checkOk;
   };
+  const checkIpAllUser = async (ip) => {
+    const dataIp = await getDocs(getBlockUserCollectionRef);
+    const dataDocAllIp = dataIp.docs.some(
+      (dataEvery) => dataEvery.data().ip === ip
+    );
+    return dataDocAllIp;
+  };
   useEffect(() => {
     //checkLoad === 1 && checkLinkOk && getCookie("data") === ""
     const loadApi = async () => {
@@ -95,32 +110,72 @@ function GetKeyUser() {
       const checkLinkOk = await checkLink();
       //Check xem có load lại web hay không
       const checkLoad = increaseReloadCount();
-
-      if (checkLoad === 1 && checkLinkOk && getCookie("data") === "") {
+      const responseIp = await getIpLocal();
+      const checkIp = await checkIpAllUser(responseIp.ip);
+      if (
+        checkLoad === 1 &&
+        !checkIp &&
+        checkLinkOk &&
+        getCookie("data") === ""
+      ) {
         setDataSelect(checkGame);
         setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
         setCheckSuccess(!checkSuccess);
         //
       } else {
         if (getCookie("_Error") !== "") {
-          const helloHai = decryptStringNami(getCookie("_Error"))
+          const helloHai = decryptStringNami(getCookie("_Error"));
           const arrayTime = helloHai.split("-") || getCookie("_Error");
+          if (checkIp) {
+            console.log("ok")
+            messageApi.open({
+              type: "error",
+              content: `Bạn Đã Bị Cấm!`,
+            });
+            setStringNoti("Bạn Đã Bị Cấm Vào Web Khi Có Ý Đồ Bất Chính");
+          }
+          else if (arrayTime.length > 1) {
+            const targetTime2 = parseTimeToTargetDate(arrayTime[1]);
+            arrayTime.push(targetTime2);
+            setDataSource(arrayTime);
+          } else {
+            //Đoạn này sẽ block ip khi cố tình chỉnh sửa
 
-          const targetTime2 = parseTimeToTargetDate(arrayTime[1]);
-          arrayTime.push(targetTime2);
+            const newDocRefBlockUser = doc(getBlockUserCollectionRef);
+            const objectNew = {
+              ip: responseIp.ip,
+              id: newDocRefBlockUser.id,
+            };
+            try {
+              await setDoc(newDocRefBlockUser, objectNew);
+            } catch { }
+            messageApi.open({
+              type: "error",
+              content: `Vui Lòng Đừng Chỉnh Linh Tinh!`,
+            });
+            setStringNoti("Vui Lòng Không Có Ý Đồ Bất Chính");
+          }
+        }
+        else if (checkIp) {
 
-          setDataSource(arrayTime);
-        } else {
           messageApi.open({
             type: "error",
-            content: `Bạn Đã Cố Truy Cập Trái Phép Không Theo Tuần Tự Vui Lòng Get Link Lại!`,
+            content: `Bạn Đã Bị Cấm!`,
           });
-          setStringNoti("Vui Lòng Get Link Lại");
+          setStringNoti("Bạn Đã Bị Cấm Vào Web Khi Có Ý Đồ Bất Chính");
+        }
+        else {
+          setStringNoti("Vui Lòng Get Link Và Thử Lại");
+          messageApi.open({
+            type: "error",
+            content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
+          });
         }
       }
     };
     loadApi();
   }, []);
+
   const targetTime = new Date();
   targetTime.setMinutes(targetTime.getMinutes() + 5);
 
@@ -148,8 +203,16 @@ function GetKeyUser() {
                 </>
               )}
 
-              <h1>Key Của Bạn Là</h1>
-              <Tag color="red">{dataSource[0] || stringNoti}</Tag>
+              <h1>
+                Key Game{" "}
+                {dataSource.length > 1 ? dataSource[0].split("&")[1] : ""} Của
+                Bạn Là
+              </h1>
+              <Tag color="red">
+                {dataSource.length > 1
+                  ? dataSource[0].split("&")[0]
+                  : stringNoti}
+              </Tag>
               {dataSource.length > 1 && (
                 <>
                   <Clock targetTime={dataSource[2]} />

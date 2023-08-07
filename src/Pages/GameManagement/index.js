@@ -12,6 +12,7 @@ import {
 
 function GameManagement() {
   const getGameCollectionRef = collection(db, "gameManagement");
+  const getKeyCollectionRef = collection(db, "getKey");
   const [dataSource, setDataSource] = useState([]);
   const [tempDataSource, setTempDataSource] = useState([]);
   const [deleteId, setDeleteId] = useState([])
@@ -34,7 +35,19 @@ function GameManagement() {
     if(deleteId.length>0){
       deleteId.map(async (dataMap)=>{
         const categoryDoc = doc(db, "gameManagement", dataMap.id);
+        const dataKey = await getDocs(getKeyCollectionRef);
+       
+        const dataDocAllKey = dataKey.docs
+          .filter(
+            (dataFilter) => dataFilter.data().idGame === dataMap.id
+          )
+          .map((dataMap) => dataMap.data());
+        
         await deleteDoc(categoryDoc);
+        dataDocAllKey.map(async dataMap2=>{
+          const categoryDocKey = doc(db, "getKey", dataMap2.id);
+          await deleteDoc(categoryDocKey);
+        })
         setDeleteId([]);
         fetchApi();
       })

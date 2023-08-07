@@ -56,7 +56,10 @@ function Header(props) {
                 </div>
 
                 <div className="header__bar">
-                    <SliderHomeBar />
+                    {
+                        token &&  <SliderHomeBar />
+                    }
+                  
                 </div>
 
             </header>
