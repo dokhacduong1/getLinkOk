@@ -121,7 +121,7 @@ function GetKeyUser() {
       const responseIp = await getIpLocal();
       const dataKeyTime = await getDataKey(responseIp.ip)
       if (
-        !dataKeyTime.length > 0
+        !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
       ) {
 
         setDataSelect(checkGame);
