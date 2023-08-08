@@ -42,50 +42,57 @@ function GetKeyUser() {
     const dataGame = await getDocs(getGameCollectionRef);
     const newDocRefKeyTime = doc(getKeyTimeUserCollectionRef);
     const responseIp = await getIpLocal();
+    const dataKeyTime = await getDataKey(responseIp.ip);
+    if (!dataKeyTime.length > 0) {
+      const dataDocAllGame = dataGame.docs
+        .filter((dataFilter) => dataFilter.data().id === idGame)
+        .map((dataMap) => dataMap.data())[0];
 
-    const dataDocAllGame = dataGame.docs
-      .filter((dataFilter) => dataFilter.data().id === idGame)
-      .map((dataMap) => dataMap.data())[0];
-
-    const dataDocAllKey = dataKey.docs
-      .filter((dataFilter) => dataFilter.data().idGame === idGame)
-      .map((dataMap) => dataMap.data());
-    const timeCookie = 5;
-    if (dataDocAllKey.length === 0) {
-      const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${
-        dataDocAllGame?.nameGame
-      }-${add5MinutesToCurrentTime(timeCookie)}`;
-      const objectNew = {
-        ip: responseIp.ip,
-        id: newDocRefKeyTime.id,
-        data: dataOk,
-      };
-      try {
-        await setDoc(newDocRefKeyTime, objectNew);
-      } catch {}
-      setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
-    } else {
-      const dataOk = `${dataDocAllKey[0]?.key}&${
-        dataDocAllGame?.nameGame
-      }-${add5MinutesToCurrentTime(timeCookie)}`;
-      const objectNew = {
-        ip: responseIp.ip,
-        id: newDocRefKeyTime.id,
-        data: dataOk,
-      };
-      try {
-        await setDoc(newDocRefKeyTime, objectNew);
-      } catch {}
-      setDataSource(dataDocAllKey[0]);
+      const dataDocAllKey = dataKey.docs
+        .filter((dataFilter) => dataFilter.data().idGame === idGame)
+        .map((dataMap) => dataMap.data());
+      const timeCookie = 5;
+      if (dataDocAllKey.length === 0) {
+        const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${
+          dataDocAllGame?.nameGame
+        }-${add5MinutesToCurrentTime(timeCookie)}`;
+        const objectNew = {
+          ip: responseIp.ip,
+          id: newDocRefKeyTime.id,
+          data: dataOk,
+        };
+        try {
+          await setDoc(newDocRefKeyTime, objectNew);
+        } catch {}
+        setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
+      } else {
+        const dataOk = `${dataDocAllKey[0]?.key}&${
+          dataDocAllGame?.nameGame
+        }-${add5MinutesToCurrentTime(timeCookie)}`;
+        const objectNew = {
+          ip: responseIp.ip,
+          id: newDocRefKeyTime.id,
+          data: dataOk,
+        };
+        try {
+          await setDoc(newDocRefKeyTime, objectNew);
+        } catch {}
+        setDataSource(dataDocAllKey[0]);
+      }
+      //Mỗi lần dùng sẽ xóa key này
+      if (dataDocAllKey.length > 0) {
+        const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
+        await deleteDoc(keyDoc);
+      }
+      setCheckSuccess(false);
+      //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
+      window.location.replace("https://www.vuitool.online/");
+    }else{
+      messageApi.open({
+        type: "error",
+        content: `Không Tà Đạo Nha Bro! Đừng Mở 2 Tab Rồi Get Link Không Ổn Đâu`,
+      });
     }
-    //Mỗi lần dùng sẽ xóa key này
-    if (dataDocAllKey.length > 0) {
-      const keyDoc = doc(db, "getKey", dataDocAllKey[0]?.id);
-      await deleteDoc(keyDoc);
-    }
-    setCheckSuccess(false);
-    //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
-    window.location.replace("https://www.vuitool.online/");
   };
 
   //Hàm Này Lôi Ra Cái Dữ Liệu Tên game Gán Cho Seleect
