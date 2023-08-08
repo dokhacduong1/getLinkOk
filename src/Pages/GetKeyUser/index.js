@@ -53,7 +53,7 @@ function GetKeyUser() {
     const timeCookie = 5;
     if (dataDocAllKey.length === 0) {
       const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}&${getDataTime()}`
+        }-${add5MinutesToCurrentTime(timeCookie)}}`
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
@@ -66,7 +66,7 @@ function GetKeyUser() {
 
     } else {
       const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}&${getDataTime()}`
+        }-${add5MinutesToCurrentTime(timeCookie)}}`
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
@@ -133,6 +133,7 @@ function GetKeyUser() {
         if (dataKeyTime.length > 0) {
           const arrayTime = dataKeyTime[0].data.split("-") || ""
           const targetTime = parseTimeToTargetDate(arrayTime[1]);
+       
           arrayTime.push(targetTime);
           setDataSource(arrayTime);
         }
