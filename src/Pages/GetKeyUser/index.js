@@ -124,6 +124,7 @@ function GetKeyUser() {
     console.log(`lengt ${!dataKeyTime.length > 0}`)
     console.log("checkLinkOk " + checkLinkOk)
     console.log(`checkLoad ${checkLoad === 1}`)
+    //if time === 0 mà get link được sẽ chạy vào đây
     if (callback === 1) {
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
@@ -131,6 +132,7 @@ function GetKeyUser() {
       setDataSource([]);
       return;
     }
+    
     if (
       !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
     ) {
