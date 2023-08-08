@@ -28,7 +28,7 @@ function GetKeyUser() {
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState([]);
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
@@ -136,10 +136,10 @@ function GetKeyUser() {
       if (dataKeyTime.length > 0) {
         const arrayTime = dataKeyTime[0].data.split("-") || "";
         const targetTime = parseTimeToTargetDate(arrayTime[1]);
-        setStatus(false);
         arrayTime.push(targetTime);
         setDataSource(arrayTime);
       } else {
+        setStatus(true);
         messageApi.open({
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
