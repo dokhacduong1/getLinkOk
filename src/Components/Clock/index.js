@@ -21,6 +21,9 @@ const Clock = ({ targetTime,loadApi }) => {
   useEffect(() => {
     fetchApi()
     const interval = setInterval(() => {
+      if(timeRemaining ===0){
+        clearInterval(interval)
+      }
       setTimeRemaining(calculateTimeRemaining());
 
     }, 1000);
@@ -34,7 +37,7 @@ const Clock = ({ targetTime,loadApi }) => {
       try {
         await deleteDoc(keyTimeDoc);
         loadApi(1)
-        setTimeRemaining(999999);
+       
       } catch {
 
       }
