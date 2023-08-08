@@ -6,7 +6,7 @@ import { getIpLocal } from '../../Services/IpApi';
 import { getDataTime } from '../../Helpers/dataTime';
 
 
-const Clock = ({ targetTime }) => {
+const Clock = ({ targetTime,loadApi }) => {
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
   const [dataKeyTimeOk, setDataKeyTimeOk] = useState([])
@@ -33,7 +33,7 @@ const Clock = ({ targetTime }) => {
       const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
       try {
         await deleteDoc(keyTimeDoc);
-        window.location.replace("https://www.vuitool.online/")
+       loadApi()
       } catch {
 
       }

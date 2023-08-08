@@ -112,43 +112,44 @@ function GetKeyUser() {
     const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === ip).map(dataMap => dataMap.data());
     return dataDocAllKeyTime
   }
+  const loadApi = async () => {
+    const checkGame = await getSelectGame();
+    const checkLinkOk = await checkLink();
+    //Check xem có load lại web hay không
+    const checkLoad = increaseReloadCount();
+    const responseIp = await getIpLocal();
+    const dataKeyTime = await getDataKey(responseIp.ip)
+    if (
+      !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
+    ) {
+
+      setDataSelect(checkGame);
+      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
+      setCheckSuccess(!checkSuccess);
+      //
+    } else {
+      if (dataKeyTime.length > 0) {
+        const arrayTime = dataKeyTime[0].data.split("-") || ""
+        const targetTime = parseTimeToTargetDate(arrayTime[1]);
+
+        arrayTime.push(targetTime);
+        setDataSource(arrayTime);
+      }
+      else {
+        messageApi.open({
+          type: "error",
+          content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
+        });
+        setStringNoti("Vui Lòng Get Link Và Thử Lại");
+      }
+    }
+
+
+
+  };
   useEffect(() => {
     //checkLoad === 1  && checkLinkOk && getCookie("data") === ""
-    const loadApi = async () => {
-      const checkGame = await getSelectGame();
-      const checkLinkOk = await checkLink();
-      //Check xem có load lại web hay không
-      const checkLoad = increaseReloadCount();
-      const responseIp = await getIpLocal();
-      const dataKeyTime = await getDataKey(responseIp.ip)
-      if (
-        !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
-      ) {
-
-        setDataSelect(checkGame);
-        setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
-        setCheckSuccess(!checkSuccess);
-        //
-      } else {
-        if (dataKeyTime.length > 0) {
-          const arrayTime = dataKeyTime[0].data.split("-") || ""
-          const targetTime = parseTimeToTargetDate(arrayTime[1]);
-
-          arrayTime.push(targetTime);
-          setDataSource(arrayTime);
-        }
-        else {
-          messageApi.open({
-            type: "error",
-            content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
-          });
-          setStringNoti("Vui Lòng Get Link Và Thử Lại");
-        }
-      }
-
-
-
-    };
+   
     loadApi();
   }, []);
 
@@ -190,7 +191,7 @@ function GetKeyUser() {
               </Tag>
               {dataSource.length > 1 && (
                 <>
-                  <Clock targetTime={dataSource[2]} />
+                  <Clock targetTime={dataSource[2]} loadApi ={loadApi} />
                 </>
               )}
               <p>
