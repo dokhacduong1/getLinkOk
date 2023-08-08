@@ -32,7 +32,7 @@ function GetKeyUser() {
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState([]);
-
+  const [getIP,setGetIP] = useState([])
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
   const [checkSuccess, setCheckSuccess] = useState(false);
@@ -41,8 +41,7 @@ function GetKeyUser() {
     const dataKey = await getDocs(getKeyCollectionRef);
     const dataGame = await getDocs(getGameCollectionRef);
     const newDocRefKeyTime = doc(getKeyTimeUserCollectionRef);
-    const responseIp = await getIpLocal();
-    const dataKeyTime = await getDataKey(responseIp.ip);
+    const dataKeyTime = await getDataKey(getIP);
     if (!dataKeyTime.length > 0) {
       const dataDocAllGame = dataGame.docs
         .filter((dataFilter) => dataFilter.data().id === idGame)
@@ -57,7 +56,7 @@ function GetKeyUser() {
           dataDocAllGame?.nameGame
         }-${add5MinutesToCurrentTime(timeCookie)}`;
         const objectNew = {
-          ip: responseIp.ip,
+          ip: getIP,
           id: newDocRefKeyTime.id,
           data: dataOk,
         };
@@ -70,7 +69,7 @@ function GetKeyUser() {
           dataDocAllGame?.nameGame
         }-${add5MinutesToCurrentTime(timeCookie)}`;
         const objectNew = {
-          ip: responseIp.ip,
+          ip: getIP,
           id: newDocRefKeyTime.id,
           data: dataOk,
         };
@@ -85,15 +84,16 @@ function GetKeyUser() {
         await deleteDoc(keyDoc);
       }
       setCheckSuccess(false);
-      //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
-      window.location.replace("https://www.vuitool.online/");
+      
     }else{
       messageApi.open({
         type: "error",
         content: `Không Tà Đạo Nha Bro! Đừng Mở 2 Tab Rồi Get Link Không Ổn Đâu`,
       });
-      window.location.replace("https://www.vuitool.online/");
+     
     }
+    //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
+    window.location.replace("https://www.vuitool.online/");
   };
 
   //Hàm Này Lôi Ra Cái Dữ Liệu Tên game Gán Cho Seleect
@@ -141,6 +141,7 @@ function GetKeyUser() {
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
+      setGetIP(responseIp)
       setDataSource([]);
       return;
     }
@@ -149,6 +150,7 @@ function GetKeyUser() {
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
+      setGetIP(responseIp.ip)
       //
     } else {
       if (dataKeyTime.length > 0) {
