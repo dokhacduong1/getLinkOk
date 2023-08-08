@@ -92,6 +92,7 @@ function GetKeyUser() {
         type: "error",
         content: `Không Tà Đạo Nha Bro! Đừng Mở 2 Tab Rồi Get Link Không Ổn Đâu`,
       });
+      window.location.replace("https://www.vuitool.online/");
     }
   };
 
