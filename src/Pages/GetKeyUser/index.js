@@ -123,27 +123,13 @@ function GetKeyUser() {
       .map((dataMap) => dataMap.data());
     return dataDocAllKeyTime;
   };
-  const loadApi = async (callback = 0) => {
+  const loadApi = async () => {
     const checkGame = await getSelectGame();
     const checkLinkOk = await checkLink();
     //Check xem có load lại web hay không
     const checkLoad = await increaseReloadCount();
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDataKey(responseIp.ip);
-
-    //if time === 0 mà get link được sẽ chạy vào đây
-    if (callback === 1 && checkLoad === 1 && checkLinkOk) {
-      messageApi.open({
-        type: "success",
-        content: `Đã Load Thành Công Đợi Load Lại Lấy Key Xíu! Đợi Xíu Nha...`,
-      });
-      setDataSelect(checkGame);
-      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
-      setCheckSuccess(!checkSuccess);
-      setGetIP(responseIp.ip);
-      setDataSource([]);
-      return;
-    }
 
     if (!dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1) {
       setDataSelect(checkGame);
@@ -210,7 +196,7 @@ function GetKeyUser() {
               </Tag>
               {dataSource.length > 1 && (
                 <>
-                  <Clock targetTime={dataSource[2]} loadApi={loadApi} />
+                  <Clock targetTime={dataSource[2]} />
                 </>
               )}
               <p>

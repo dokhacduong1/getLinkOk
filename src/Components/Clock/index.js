@@ -5,7 +5,7 @@ import {  db2 } from "../../Config/Firebase";
 import { getIpLocal } from "../../Services/IpApi";
 
 
-const Clock = ({ targetTime, loadApi }) => {
+const Clock = ({ targetTime }) => {
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
@@ -34,7 +34,7 @@ const Clock = ({ targetTime, loadApi }) => {
       try {
         await deleteDoc(keyTimeDoc);
         //Call back lại hàm khi người dùng getlink được nhưng time ===0
-        loadApi(1);
+        window.location.replace("https://www.vuitool.online/");
       } catch {}
     };
     DeleteOk();
