@@ -1,12 +1,12 @@
-import { Tag, message } from "antd";
+import { Tag } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
-import { db, db2 } from "../../Config/Firebase";
+import {  db2 } from "../../Config/Firebase";
 import { getIpLocal } from "../../Services/IpApi";
-import { getDataTime } from "../../Helpers/dataTime";
+
 
 const Clock = ({ targetTime, loadApi }) => {
-  const [messageApi, contextHolder] = message.useMessage();
+
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
   const [dataKeyTimeOk, setDataKeyTimeOk] = useState([]);
@@ -58,7 +58,7 @@ const Clock = ({ targetTime, loadApi }) => {
 
   return (
     <>
-      {contextHolder}
+     
       <div className="countdown-timer">
         <div style={{ padding: "10px 0" }} className="time-remaining">
           <span>
