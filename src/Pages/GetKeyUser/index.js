@@ -126,6 +126,10 @@ function GetKeyUser() {
 
     //if time === 0 mà get link được sẽ chạy vào đây
     if (callback === 1) {
+      messageApi.open({
+        type: "success",
+        content: `Đã Load Thành Công Đợi Load Lại Lấy Key Xíu! Đợi Xíu Nha...`,
+      });
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);

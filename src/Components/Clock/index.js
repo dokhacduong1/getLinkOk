@@ -29,11 +29,6 @@ const Clock = ({ targetTime, loadApi }) => {
   }, []);
 
   if (timeRemaining === 0) {
-    messageApi.open({
-      type: "success",
-      content: `Đã Load Thành Công Đợi Load Lại Lấy Key Xíu! Đợi Xíu Nha...`,
-    });
-   
     const DeleteOk = async () => {
       const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
       try {
@@ -62,18 +57,17 @@ const Clock = ({ targetTime, loadApi }) => {
   }
 
   return (
-   <>
-    {contextHolder}
-    <div className="countdown-timer">
-      <div style={{ padding: "10px 0" }} className="time-remaining">
-        <span>
-          <i>Thời Gian Đếm Ngược</i>
-        </span>{" "}
-        <Tag>{formatTime(timeRemaining)}</Tag>
+    <>
+      {contextHolder}
+      <div className="countdown-timer">
+        <div style={{ padding: "10px 0" }} className="time-remaining">
+          <span>
+            <i>Thời Gian Đếm Ngược</i>
+          </span>{" "}
+          <Tag>{formatTime(timeRemaining)}</Tag>
+        </div>
       </div>
-    </div>
-   </>
-   
+    </>
   );
 };
 
