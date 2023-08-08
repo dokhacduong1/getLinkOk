@@ -33,7 +33,7 @@ const Clock = ({ targetTime,loadApi }) => {
       const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
       try {
         await deleteDoc(keyTimeDoc);
-       loadApi()
+       loadApi(1)
       } catch {
 
       }

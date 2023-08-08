@@ -103,9 +103,9 @@ function GetKeyUser() {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
     const checkUser = document.referrer;
-   
+
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
-  
+
     return checkOk;
   };
   //Check xem key trên server ip này lấy chưa
@@ -114,16 +114,22 @@ function GetKeyUser() {
     const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === ip).map(dataMap => dataMap.data());
     return dataDocAllKeyTime
   }
-  const loadApi = async () => {
+  const loadApi = async (callback = 0) => {
     const checkGame = await getSelectGame();
     const checkLinkOk = await checkLink();
     //Check xem có load lại web hay không
     const checkLoad = await increaseReloadCount();
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDataKey(responseIp.ip)
-    console.log(`lengt ${!dataKeyTime.length>0}`)
-    console.log("checkLinkOk "+checkLinkOk)
+    console.log(`lengt ${!dataKeyTime.length > 0}`)
+    console.log("checkLinkOk " + checkLinkOk)
     console.log(`checkLoad ${checkLoad === 1}`)
+    if (callback === 1) {
+      setDataSelect(checkGame);
+      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
+      setCheckSuccess(!checkSuccess);
+      return;
+    }
     if (
       !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
     ) {
@@ -154,7 +160,7 @@ function GetKeyUser() {
   };
   useEffect(() => {
     //checkLoad === 1  && checkLinkOk && getCookie("data") === ""
-   
+
     loadApi();
   }, []);
 
@@ -196,7 +202,7 @@ function GetKeyUser() {
               </Tag>
               {dataSource.length > 1 && (
                 <>
-                  <Clock targetTime={dataSource[2]} loadApi ={loadApi} />
+                  <Clock targetTime={dataSource[2]} loadApi={loadApi} />
                 </>
               )}
               <p>
