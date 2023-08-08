@@ -42,6 +42,7 @@ function GetKeyUser() {
     const dataGame = await getDocs(getGameCollectionRef);
     const newDocRefKeyTime = doc(getKeyTimeUserCollectionRef);
     const dataKeyTime = await getDataKey(getIP);
+    setStringNoti("Đang Lấy Key Cho Bạn Đợi Xíu...")
     if (!dataKeyTime.length > 0) {
       const dataDocAllGame = dataGame.docs
         .filter((dataFilter) => dataFilter.data().id === idGame)
