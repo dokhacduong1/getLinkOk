@@ -132,7 +132,7 @@ function GetKeyUser() {
     const dataKeyTime = await getDataKey(responseIp.ip);
 
     //if time === 0 mà get link được sẽ chạy vào đây
-    if (callback === 1) {
+    if (callback === 1 && checkLoad === 1 && checkLinkOk) {
       messageApi.open({
         type: "success",
         content: `Đã Load Thành Công Đợi Load Lại Lấy Key Xíu! Đợi Xíu Nha...`,
