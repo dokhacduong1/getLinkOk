@@ -163,7 +163,9 @@ function GetKeyUser() {
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
         });
+        setDataSource([]);
         setStringNoti("Vui Lòng Get Link Và Thử Lại");
+        
       }
     }
   };
