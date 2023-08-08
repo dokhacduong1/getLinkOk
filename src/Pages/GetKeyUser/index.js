@@ -14,6 +14,7 @@ import { getCookie, setCookiePhut } from "../../Helpers/cookie";
 import { increaseReloadCount } from "../../Helpers/countWeb";
 import {
   add5MinutesToCurrentTime,
+  getDataTime,
   parseTimeToTargetDate,
 } from "../../Helpers/dataTime";
 import Clock from "../../Components/Clock";
@@ -52,7 +53,7 @@ function GetKeyUser() {
     const timeCookie = 5;
     if (dataDocAllKey.length === 0) {
       const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`
+        }-${add5MinutesToCurrentTime(timeCookie)}&${getDataTime()}`
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
@@ -65,7 +66,7 @@ function GetKeyUser() {
 
     } else {
       const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`
+        }-${add5MinutesToCurrentTime(timeCookie)}&${getDataTime()}`
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
