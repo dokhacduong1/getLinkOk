@@ -52,31 +52,31 @@ function GetKeyUser() {
       .map((dataMap) => dataMap.data());
     const timeCookie = 5;
     if (dataDocAllKey.length === 0) {
-      const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`
+      const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${
+        dataDocAllGame?.nameGame
+      }-${add5MinutesToCurrentTime(timeCookie)}`;
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
-        data: dataOk
+        data: dataOk,
       };
       try {
         await setDoc(newDocRefKeyTime, objectNew);
-      } catch { }
+      } catch {}
       setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
-
     } else {
-      const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`
+      const dataOk = `${dataDocAllKey[0]?.key}&${
+        dataDocAllGame?.nameGame
+      }-${add5MinutesToCurrentTime(timeCookie)}`;
       const objectNew = {
         ip: responseIp.ip,
         id: newDocRefKeyTime.id,
-        data: dataOk
+        data: dataOk,
       };
       try {
         await setDoc(newDocRefKeyTime, objectNew);
-      } catch { }
+      } catch {}
       setDataSource(dataDocAllKey[0]);
-
     }
     //Mỗi lần dùng sẽ xóa key này
     if (dataDocAllKey.length > 0) {
@@ -85,7 +85,7 @@ function GetKeyUser() {
     }
     setCheckSuccess(false);
     //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
-    window.location.replace("https://www.vuitool.online/")
+    window.location.replace("https://www.vuitool.online/");
   };
 
   //Hàm Này Lôi Ra Cái Dữ Liệu Tên game Gán Cho Seleect
@@ -111,17 +111,19 @@ function GetKeyUser() {
   //Check xem key trên server ip này lấy chưa
   const getDataKey = async (ip) => {
     const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
-    const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === ip).map(dataMap => dataMap.data());
-    return dataDocAllKeyTime
-  }
+    const dataDocAllKeyTime = dataKeyTime.docs
+      .filter((dataFind) => dataFind.data().ip === ip)
+      .map((dataMap) => dataMap.data());
+    return dataDocAllKeyTime;
+  };
   const loadApi = async (callback = 0) => {
     const checkGame = await getSelectGame();
     const checkLinkOk = await checkLink();
     //Check xem có load lại web hay không
     const checkLoad = await increaseReloadCount();
     const responseIp = await getIpLocal();
-    const dataKeyTime = await getDataKey(responseIp.ip)
-   
+    const dataKeyTime = await getDataKey(responseIp.ip);
+
     //if time === 0 mà get link được sẽ chạy vào đây
     if (callback === 1) {
       setDataSelect(checkGame);
@@ -131,23 +133,19 @@ function GetKeyUser() {
       return;
     }
 
-    if (
-      !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
-    ) {
-
+    if (!dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1) {
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
       //
     } else {
       if (dataKeyTime.length > 0) {
-        const arrayTime = dataKeyTime[0].data.split("-") || ""
+        const arrayTime = dataKeyTime[0].data.split("-") || "";
         const targetTime = parseTimeToTargetDate(arrayTime[1]);
 
         arrayTime.push(targetTime);
         setDataSource(arrayTime);
-      }
-      else {
+      } else {
         messageApi.open({
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
@@ -155,16 +153,11 @@ function GetKeyUser() {
         setStringNoti("Vui Lòng Get Link Và Thử Lại");
       }
     }
-
-
-
   };
   useEffect(() => {
     //checkLoad === 1  && checkLinkOk && getCookie("data") === ""
     loadApi();
   }, []);
-
-
 
   const handleClick = async (value) => {
     fetchApiClick(value);

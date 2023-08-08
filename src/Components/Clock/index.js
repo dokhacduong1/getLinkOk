@@ -1,48 +1,48 @@
-import { Tag } from 'antd';
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import React, { useState, useEffect } from 'react';
-import { db, db2 } from '../../Config/Firebase';
-import { getIpLocal } from '../../Services/IpApi';
-import { getDataTime } from '../../Helpers/dataTime';
+import { Tag, message } from "antd";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { db, db2 } from "../../Config/Firebase";
+import { getIpLocal } from "../../Services/IpApi";
+import { getDataTime } from "../../Helpers/dataTime";
 
-
-const Clock = ({ targetTime,loadApi }) => {
+const Clock = ({ targetTime, loadApi }) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
-  const [dataKeyTimeOk, setDataKeyTimeOk] = useState([])
+  const [dataKeyTimeOk, setDataKeyTimeOk] = useState([]);
   const fetchApi = async () => {
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
-    const dataDocAllKeyTime = dataKeyTime.docs.filter((dataFind) => dataFind.data().ip === responseIp.ip).map(dataMap => dataMap.data());
-    setDataKeyTimeOk(dataDocAllKeyTime)
-   
-  }
+    const dataDocAllKeyTime = dataKeyTime.docs
+      .filter((dataFind) => dataFind.data().ip === responseIp.ip)
+      .map((dataMap) => dataMap.data());
+    setDataKeyTimeOk(dataDocAllKeyTime);
+  };
 
   useEffect(() => {
-    fetchApi()
+    fetchApi();
     const interval = setInterval(() => {
-     
       setTimeRemaining(calculateTimeRemaining());
-
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   if (timeRemaining === 0) {
+    messageApi.open({
+      type: "success",
+      content: `Đã Load Thành Công Đợi Load Lại Lấy Key Xíu! Đợi Xíu Nha...`,
+    });
+   
     const DeleteOk = async () => {
       const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
       try {
         await deleteDoc(keyTimeDoc);
         //Call back lại hàm khi người dùng getlink được nhưng time ===0
-        loadApi(1)
-       
-      } catch {
-
-      }
-    }
-    DeleteOk()
-
+        loadApi(1);
+      } catch {}
+    };
+    DeleteOk();
   }
   function calculateTimeRemaining() {
     const now = new Date();
@@ -56,13 +56,24 @@ const Clock = ({ targetTime,loadApi }) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   }
 
   return (
+   <>
+    {contextHolder}
     <div className="countdown-timer">
-      <div style={{ padding: "10px 0" }} className="time-remaining"><span><i>Thời Gian Đếm Ngược</i></span> <Tag>{formatTime(timeRemaining)}</Tag></div>
+      <div style={{ padding: "10px 0" }} className="time-remaining">
+        <span>
+          <i>Thời Gian Đếm Ngược</i>
+        </span>{" "}
+        <Tag>{formatTime(timeRemaining)}</Tag>
+      </div>
     </div>
+   </>
+   
   );
 };
 
