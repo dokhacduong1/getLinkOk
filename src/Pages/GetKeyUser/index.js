@@ -166,17 +166,7 @@ function GetKeyUser() {
         <Card className="getKeyUser__card">
           {dataSource && (
             <>
-              {checkSuccess && (
-                <>
-                  <Select
-                    onChange={handleClick}
-                    options={dataSelect}
-                    style={{ width: 170 }}
-                    placeholder="Tên Game"
-                    className="search__welcome-form-select"
-                  />
-                </>
-              )}
+              
               <h2>Trạng Thái</h2> {status ? <Tag color="green">Sẵn Sàng Get Link Mới</Tag> : <Tag color="#cd201f">Chưa Thể Get Link Mới</Tag>} 
 
               <h1>
@@ -189,6 +179,17 @@ function GetKeyUser() {
                   ? dataSource[0].split("&")[0]
                   : stringNoti}
               </Tag>
+              {checkSuccess && (
+                <>
+                  <Select
+                    onChange={handleClick}
+                    options={dataSelect}
+                    style={{ width: 170 }}
+                    placeholder="Tên Game"
+                    className="search__welcome-form-select"
+                  />
+                </>
+              )}
               {dataSource.length > 1 && (
                 <>
                   <Clock targetTime={dataSource[2]} />
