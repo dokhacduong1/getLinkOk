@@ -121,9 +121,7 @@ function GetKeyUser() {
     const checkLoad = await increaseReloadCount();
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDataKey(responseIp.ip)
-    console.log(`lengt ${!dataKeyTime.length > 0}`)
-    console.log("checkLinkOk " + checkLinkOk)
-    console.log(`checkLoad ${checkLoad === 1}`)
+   
     //if time === 0 mà get link được sẽ chạy vào đây
     if (callback === 1) {
       setDataSelect(checkGame);
@@ -132,7 +130,7 @@ function GetKeyUser() {
       setDataSource([]);
       return;
     }
-    
+
     if (
       !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
     ) {
@@ -163,7 +161,6 @@ function GetKeyUser() {
   };
   useEffect(() => {
     //checkLoad === 1  && checkLinkOk && getCookie("data") === ""
-
     loadApi();
   }, []);
 
