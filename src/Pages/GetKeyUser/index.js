@@ -10,18 +10,14 @@ import {
 } from "firebase/firestore";
 import { db, db2 } from "../../Config/Firebase";
 import { useEffect, useState } from "react";
-import { getCookie, setCookiePhut } from "../../Helpers/cookie";
+
 import { increaseReloadCount } from "../../Helpers/countWeb";
 import {
   add5MinutesToCurrentTime,
-  getDataTime,
   parseTimeToTargetDate,
 } from "../../Helpers/dataTime";
 import Clock from "../../Components/Clock";
-import {
-  decryptStringNami,
-  encryptStringNami,
-} from "../../Helpers/decodeString";
+
 import { getIpLocal } from "../../Services/IpApi";
 
 function GetKeyUser() {
@@ -32,6 +28,7 @@ function GetKeyUser() {
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState([]);
+  const [status, setStatus] = useState(true);
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
@@ -53,9 +50,8 @@ function GetKeyUser() {
         .map((dataMap) => dataMap.data());
       const timeCookie = 5;
       if (dataDocAllKey.length === 0) {
-        const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${
-          dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`;
+        const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
+          }-${add5MinutesToCurrentTime(timeCookie)}`;
         const objectNew = {
           ip: getIP,
           id: newDocRefKeyTime.id,
@@ -63,12 +59,11 @@ function GetKeyUser() {
         };
         try {
           await setDoc(newDocRefKeyTime, objectNew);
-        } catch {}
+        } catch { }
         setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
       } else {
-        const dataOk = `${dataDocAllKey[0]?.key}&${
-          dataDocAllGame?.nameGame
-        }-${add5MinutesToCurrentTime(timeCookie)}`;
+        const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
+          }-${add5MinutesToCurrentTime(timeCookie)}`;
         const objectNew = {
           ip: getIP,
           id: newDocRefKeyTime.id,
@@ -76,7 +71,7 @@ function GetKeyUser() {
         };
         try {
           await setDoc(newDocRefKeyTime, objectNew);
-        } catch {}
+        } catch { }
         setDataSource(dataDocAllKey[0]);
       }
       //Mỗi lần dùng sẽ xóa key này
@@ -141,7 +136,7 @@ function GetKeyUser() {
       if (dataKeyTime.length > 0) {
         const arrayTime = dataKeyTime[0].data.split("-") || "";
         const targetTime = parseTimeToTargetDate(arrayTime[1]);
-
+        setStatus(false);
         arrayTime.push(targetTime);
         setDataSource(arrayTime);
       } else {
@@ -151,7 +146,6 @@ function GetKeyUser() {
         });
         setDataSource([]);
         setStringNoti("Vui Lòng Get Link Và Thử Lại");
-        
       }
     }
   };
@@ -183,6 +177,7 @@ function GetKeyUser() {
                   />
                 </>
               )}
+              <h2>Trạng Thái</h2> {status ? <Tag color="green">Sẵn Sàng Get Link Mới</Tag> : <Tag color="#cd201f">Chưa Thể Get Link Mới</Tag>} 
 
               <h1>
                 Key Game{" "}
@@ -203,6 +198,15 @@ function GetKeyUser() {
                 <strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 5 Phút
               </p>
               <p> Qua 5 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
+              <p>
+                {" "}
+                <i>
+                  Luôn Phải Vào Web Check Xem Trạng Thái 
+                  <strong> "Sẵn Sàng Get Link Mới"</strong> Hay Chưa{" "} Nếu Cố Tình Get Khi Chưa Hết Giờ Phải Get Lại Nhiều Lần Tự Chịu!
+
+                </i>{" "}
+                <strong></strong>
+              </p>
               <p>
                 {" "}
                 Key Sẽ Luôn Được Lưu Trong Vòng <strong>5 Phút</strong> không
