@@ -28,7 +28,7 @@ function GetKeyUser() {
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState([]);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
   const [stringNoti, setStringNoti] = useState("Đang Load...");
@@ -138,8 +138,9 @@ function GetKeyUser() {
         const targetTime = parseTimeToTargetDate(arrayTime[1]);
         arrayTime.push(targetTime);
         setDataSource(arrayTime);
+        setStatus("Chưa Thể Get Link Mới");
       } else {
-        setStatus(true);
+        setStatus("Sẵn Sàng Get Link Mới");
         messageApi.open({
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
@@ -167,7 +168,7 @@ function GetKeyUser() {
           {dataSource && (
             <>
               
-              <h2>Trạng Thái</h2> {status ? <Tag color="green">Sẵn Sàng Get Link Mới</Tag> : <Tag color="#cd201f">Chưa Thể Get Link Mới</Tag>} 
+              <h2>Trạng Thái</h2> <Tag color="#cd201f"><strong>{status}</strong></Tag>
 
               <h1>
                 Key Game{" "}
