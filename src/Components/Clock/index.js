@@ -21,9 +21,7 @@ const Clock = ({ targetTime,loadApi }) => {
   useEffect(() => {
     fetchApi()
     const interval = setInterval(() => {
-      if(timeRemaining ===0){
-        clearInterval(interval)
-      }
+
       setTimeRemaining(calculateTimeRemaining());
 
     }, 1000);
@@ -35,7 +33,7 @@ const Clock = ({ targetTime,loadApi }) => {
     const DeleteOk = async () => {
       const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
       try {
-        await deleteDoc(keyTimeDoc);
+        // await deleteDoc(keyTimeDoc);
         loadApi(1)
        
       } catch {

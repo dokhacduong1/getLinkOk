@@ -128,6 +128,7 @@ function GetKeyUser() {
       setDataSelect(checkGame);
       setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
+      setDataSource([]);
       return;
     }
     if (
