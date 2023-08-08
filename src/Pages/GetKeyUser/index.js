@@ -103,7 +103,9 @@ function GetKeyUser() {
     const dataLink = await getDocs(getLinkCollectionRef);
     const dataDocAllLink = dataLink.docs.map((dataMap) => dataMap.data()?.link);
     const checkUser = document.referrer;
+    console.log("link "+checkUser)
     const checkOk = dataDocAllLink.some((dataSome) => dataSome === checkUser);
+    console.log("checkOk "+checkOk)
     return checkOk;
   };
   //Check xem key trên server ip này lấy chưa
@@ -116,12 +118,12 @@ function GetKeyUser() {
     const checkGame = await getSelectGame();
     const checkLinkOk = await checkLink();
     //Check xem có load lại web hay không
-    const checkLoad = increaseReloadCount();
+    const checkLoad = await increaseReloadCount();
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDataKey(responseIp.ip)
-    console.log("datakeyTime.lengt "+!dataKeyTime.length)
+    console.log("datakeyTime.lengt "+!dataKeyTime.length>0)
     console.log("checkLinkOk "+checkLinkOk)
-    console.log("checkLoad === 1 "+checkLoad === 1)
+    console.log("checkLoad "+checkLoad === 1)
     if (
       !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
     ) {

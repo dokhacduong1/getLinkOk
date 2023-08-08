@@ -1,13 +1,13 @@
-export function increaseReloadCount() {
-  var _hash = window.location.hash;
+export async function  increaseReloadCount() {
+  var _hash = await window.location.hash;
   if (_hash) {
-    var x = parseInt(decodeString(window.location.hash.replace("#", "")));
+    var x = await parseInt(decodeString(window.location.hash.replace("#", "")));
 
     x = x + 1;
-    const encode = encodeNumberToBase(x);
+    const encode = await encodeNumberToBase(x);
     window.location.hash = encode;
   } else {
-    window.location.hash =
+     window.location.hash = await
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
   }
   return x || 1;
