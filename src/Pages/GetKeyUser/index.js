@@ -84,7 +84,7 @@ function GetKeyUser() {
     }
     setCheckSuccess(false);
     //Tự Động Chuyển Trang Khi Tất Cả Đã Xong
-    window.location.href = "https://www.vuitool.online/";
+    window.location.replace("https://www.vuitool.online/")
   };
 
   //Hàm Này Lôi Ra Cái Dữ Liệu Tên game Gán Cho Seleect
