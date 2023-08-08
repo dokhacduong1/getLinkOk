@@ -119,7 +119,9 @@ function GetKeyUser() {
     const checkLoad = increaseReloadCount();
     const responseIp = await getIpLocal();
     const dataKeyTime = await getDataKey(responseIp.ip)
-    console.log("ok")
+    console.log("datakeyTime.lengt "+!dataKeyTime.length)
+    console.log("checkLinkOk "+checkLinkOk)
+    console.log("checkLoad === 1 "+checkLoad === 1)
     if (
       !dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1
     ) {
