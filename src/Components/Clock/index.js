@@ -1,51 +1,23 @@
 import { Tag } from "antd";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+
 import React, { useState, useEffect } from "react";
-import {  db2 } from "../../Config/Firebase";
-import { getIpLocal } from "../../Services/IpApi";
 
-
-const Clock = ({ targetTime }) => {
-
-  const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
-  const [dataKeyTimeOk, setDataKeyTimeOk] = useState([]);
-  const fetchApi = async () => {
-    const responseIp = await getIpLocal();
-    const dataKeyTime = await getDocs(getKeyTimeUserCollectionRef);
-    const dataDocAllKeyTime = dataKeyTime.docs
-      .filter((dataFind) => dataFind.data().ip === responseIp.ip)
-      .map((dataMap) => dataMap.data());
-    setDataKeyTimeOk(dataDocAllKeyTime);
-  };
+const Clock = () => {
+  const [timeRemaining, setTimeRemaining] = useState();
 
   useEffect(() => {
-    fetchApi();
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 1, 0, 0); // Set to 0h 1m 0s 0ms of the next day
+
     const interval = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining());
+      const remainingTime = tomorrow - new Date();
+      setTimeRemaining(remainingTime > 0 ? remainingTime : 0);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
-
-  if (timeRemaining === 0) {
-    const DeleteOk = async () => {
-      const keyTimeDoc = doc(db2, "keyTime", dataKeyTimeOk[0]?.id);
-      try {
-        await deleteDoc(keyTimeDoc);
-        //Call back lại hàm khi người dùng getlink được nhưng time ===0
-        window.location.replace("https://www.vuitool.online/");
-      } catch {}
-    };
-    DeleteOk();
-  }
-  function calculateTimeRemaining() {
-    const now = new Date();
-    const target = new Date(targetTime);
-    const remainingTime = target - now;
-    return remainingTime > 0 ? remainingTime : 0;
-  }
-
   function formatTime(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(seconds / 3600);
@@ -55,10 +27,12 @@ const Clock = ({ targetTime }) => {
       .toString()
       .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   }
-
+  // Rest of your component code...
+  if (timeRemaining === 0) {
+    window.location.replace("https://www.vuitool.online/");
+  }
   return (
     <>
-     
       <div className="countdown-timer">
         <div style={{ padding: "10px 0" }} className="time-remaining">
           <span>

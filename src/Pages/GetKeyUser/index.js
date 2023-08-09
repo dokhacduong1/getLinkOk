@@ -13,8 +13,9 @@ import { useEffect, useState } from "react";
 
 import { increaseReloadCount } from "../../Helpers/countWeb";
 import {
-  add5MinutesToCurrentTime,
-  parseTimeToTargetDate,
+
+  getDataTime,
+
 } from "../../Helpers/dataTime";
 import Clock from "../../Components/Clock";
 
@@ -48,14 +49,15 @@ function GetKeyUser() {
       const dataDocAllKey = dataKey.docs
         .filter((dataFilter) => dataFilter.data().idGame === idGame)
         .map((dataMap) => dataMap.data());
-      const timeCookie = 5;
+     
       if (dataDocAllKey.length === 0) {
         const dataOk = `Key Của Bạn Chọn Ngày Hôm Nay Đã Hết&${dataDocAllGame?.nameGame
-          }-${add5MinutesToCurrentTime(timeCookie)}`;
+          }`;
         const objectNew = {
           ip: getIP,
           id: newDocRefKeyTime.id,
           data: dataOk,
+          date:getDataTime()
         };
         try {
           await setDoc(newDocRefKeyTime, objectNew);
@@ -63,11 +65,12 @@ function GetKeyUser() {
         setDataSource("Key Của Bạn Chọn Ngày Hôm Nay Đã Hết");
       } else {
         const dataOk = `${dataDocAllKey[0]?.key}&${dataDocAllGame?.nameGame
-          }-${add5MinutesToCurrentTime(timeCookie)}`;
+          }`;
         const objectNew = {
           ip: getIP,
           id: newDocRefKeyTime.id,
           data: dataOk,
+          date:getDataTime()
         };
         try {
           await setDoc(newDocRefKeyTime, objectNew);
@@ -116,6 +119,14 @@ function GetKeyUser() {
     const dataDocAllKeyTime = dataKeyTime.docs
       .filter((dataFind) => dataFind.data().ip === ip)
       .map((dataMap) => dataMap.data());
+      
+   dataDocAllKeyTime.forEach(async dataForEach=>{
+      if(new Date(dataForEach.date) < new Date(getDataTime())){
+        const keyTimeDoc = doc(db2, "keyTime", dataForEach.id);
+        await deleteDoc(keyTimeDoc);
+        window.location.replace("https://www.vuitool.online/");
+      }
+   })
     return dataDocAllKeyTime;
   };
   const loadApi = async () => {
@@ -134,9 +145,7 @@ function GetKeyUser() {
       //
     } else {
       if (dataKeyTime.length > 0) {
-        const arrayTime = dataKeyTime[0].data.split("-") || "";
-        const targetTime = parseTimeToTargetDate(arrayTime[1]);
-        arrayTime.push(targetTime);
+        const arrayTime = dataKeyTime[0].data;
         setDataSource(arrayTime);
         setStatus("Chưa Thể Get Link Mới");
       } else {
@@ -172,12 +181,12 @@ function GetKeyUser() {
 
               <h1>
                 Key Game{" "}
-                {dataSource.length > 1 ? dataSource[0].split("&")[1] : ""} Của
+                {dataSource.length > 1 ? dataSource.split("&")[1] : ""} Của
                 Bạn Là
               </h1>
               <Tag color="red">
                 {dataSource.length > 1
-                  ? dataSource[0].split("&")[0]
+                  ? dataSource.split("&")[0]
                   : stringNoti}
               </Tag>
               {checkSuccess && (
@@ -193,27 +202,16 @@ function GetKeyUser() {
               )}
               {dataSource.length > 1 && (
                 <>
-                  <Clock targetTime={dataSource[2]} />
+                  <Clock />
                 </>
               )}
               <p>
-                <strong>Lưu Ý:</strong> Không Được Get Nhiều Key Dưới 5 Phút
+                <strong>Lưu Ý:</strong> Mỗi Ngày Sẽ Được Get 1 Key,Nghĩa Là Cứ Qua 0h Ngày Hôm Sau Hệ Thống Sẽ Reset Bạn Mới Được Get Lại Key
+                
               </p>
-              <p> Qua 5 Phút Muốn Lấy Lại Key Vui Lòng Get Link Rút Gọn Lại</p>
-              <p>
-                {" "}
-                <i>
-                  Luôn Phải Vào Web Check Xem Trạng Thái 
-                  <strong> "Sẵn Sàng Get Link Mới"</strong> Hay Chưa{" "} Nếu Cố Tình Get Khi Chưa Hết Giờ Phải Get Lại Nhiều Lần Tự Chịu!
-
-                </i>{" "}
-                <strong></strong>
-              </p>
-              <p>
-                {" "}
-                Key Sẽ Luôn Được Lưu Trong Vòng <strong>5 Phút</strong> không
-                thể lấy thêm key game mới trong thời gian này
-              </p>
+             
+              <p ><strong>Khi Đã Qua Ngày Mới Vui Lòng Load Lại Trang</strong> Để Nó Nhận Diện Ngày Mới Rồi Lúc Đó Mới Được Get Link Không Thì  <strong style={{fontSize:"15px"}}>Get Lần 2 Thì Tự Chịu</strong> <br/> Luôn Phải Để Ý Trạng Thái Là "<strong><i>Sẵn Sàng Get Link Mới</i></strong>" Lúc Đó Bạn Mới Được Get Link </p>
+              <p>Có Thể Xem "<strong>Thời Gian Đếm Ngược</strong>" Để Căn Giờ Được Lấy Key</p>
             </>
           )}
         </Card>
