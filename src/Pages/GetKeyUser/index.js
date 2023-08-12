@@ -28,11 +28,11 @@ function GetKeyUser() {
   const getLinkCollectionRef = collection(db, "linkManagement");
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [dataSource, setDataSource] = useState("Đang Load..");
+  const [dataSource, setDataSource] = useState("");
   const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
-  const [stringNoti, setStringNoti] = useState("");
+
   const [checkSuccess, setCheckSuccess] = useState(false);
   //Hàm này sẽ xử lý khi người dùng chọn game
   const fetchApiClick = async (idGame) => {
@@ -40,7 +40,7 @@ function GetKeyUser() {
     const dataGame = await getDocs(getGameCollectionRef);
     const newDocRefKeyTime = doc(getKeyTimeUserCollectionRef);
     const dataKeyTime = await getDataKey(getIP);
-    setStringNoti("Đang Lấy Key Cho Bạn Đợi Xíu...");
+   
     if (!dataKeyTime.length > 0) {
       const dataDocAllGame = dataGame.docs
         .filter((dataFilter) => dataFilter.data().id === idGame)
@@ -139,7 +139,8 @@ function GetKeyUser() {
 
     if (!dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1) {
       setDataSelect(checkGame);
-      setStringNoti("Vui Lòng Chọn Game Muốn Lấy Key");
+     
+      setDataSource("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
       setGetIP(responseIp.ip);
       //
@@ -155,8 +156,8 @@ function GetKeyUser() {
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
         });
-        setDataSource("Đang Load..");
-        setStringNoti("Vui Lòng Get Link Và Thử Lại");
+        setDataSource("Vui Lòng Get Link Và Thử Lại");
+      
       }
     }
   };
@@ -187,8 +188,8 @@ function GetKeyUser() {
               </h1>
               <Tag color="red">
                 {dataSource.length > 1
-                  ? dataSource.split("&")[0]
-                  : stringNoti}
+                  && dataSource?.split("&")[0]
+                  }
               </Tag>
               {checkSuccess && (
                 <>
