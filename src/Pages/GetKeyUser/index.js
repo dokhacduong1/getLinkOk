@@ -26,7 +26,7 @@ function GetKeyUser() {
   const getKeyCollectionRef = collection(db, "getKey");
   const getGameCollectionRef = collection(db, "gameManagement");
   const getLinkCollectionRef = collection(db, "linkManagement");
-
+  const [checkHideTime,setCheckHideTime] = useState(false);
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
   const [dataSource, setDataSource] = useState("Đang Load..");
   const [status, setStatus] = useState("Đang Load...");
@@ -150,6 +150,7 @@ function GetKeyUser() {
       
         setDataSource(arrayTime);
         setStatus("Chưa Thể Get Link Mới");
+        setCheckHideTime(true)
       } else {
         setStatus("Sẵn Sàng Get Link Mới");
         messageApi.open({
@@ -204,7 +205,10 @@ function GetKeyUser() {
               )}
               {dataSource.length > 1 && (
                 <>
-                  <Clock />
+                {
+                  checkHideTime &&  <Clock />
+                }
+                 
                 </>
               )}
               <p>
