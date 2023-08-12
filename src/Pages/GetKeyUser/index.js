@@ -215,7 +215,10 @@ function GetKeyUser() {
                 <strong>Lưu Ý:</strong> Mỗi Ngày Sẽ Được Get 1 Key,Nghĩa Là Cứ Qua 0h Ngày Hôm Sau Hệ Thống Sẽ Reset Bạn Mới Được Get Lại Key
                 
               </p>
-             
+              <p>
+                <strong>Lưu Ý 2:</strong> Tắt Tự Động Dịch Trang Web Của Trang Đi Để Tránh Time Đếm Ngược Không Chạy
+                
+              </p>
               <p ><strong>Khi Đã Qua Ngày Mới Vui Lòng Load Lại Trang</strong> Để Nó Nhận Diện Ngày Mới Rồi Lúc Đó Mới Được Get Link Không Thì  <strong style={{fontSize:"15px"}}>Get Lần 2 Thì Tự Chịu</strong> <br/> Luôn Phải Để Ý Trạng Thái Là "<strong><i>Sẵn Sàng Get Link Mới</i></strong>" Lúc Đó Bạn Mới Được Get Link </p>
               <p>Có Thể Xem "<strong>Thời Gian Đếm Ngược</strong>" Để Căn Giờ Được Lấy Key</p>
             </>
