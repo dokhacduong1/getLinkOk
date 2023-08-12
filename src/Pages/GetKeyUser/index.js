@@ -18,7 +18,7 @@ import {
 
 } from "../../Helpers/dataTime";
 import Clock from "../../Components/Clock";
-
+import load from "./images/load.png"
 import { getIpLocal } from "../../Services/IpApi";
 
 function GetKeyUser() {
@@ -28,7 +28,7 @@ function GetKeyUser() {
   const getLinkCollectionRef = collection(db, "linkManagement");
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [dataSource, setDataSource] = useState("Đang Load...&Chưa Có");
+  const [dataSource, setDataSource] = useState("");
   const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
@@ -175,7 +175,7 @@ function GetKeyUser() {
       {contextHolder}
       <div className="getKeyUser">
         <Card className="getKeyUser__card">
-          {dataSource && (
+          {dataSource !== "" ? (
             <>
               
               <h2>Trạng Thái</h2> <Tag color="#cd201f"><strong>{status}</strong></Tag>
@@ -214,7 +214,7 @@ function GetKeyUser() {
               <p ><strong>Khi Đã Qua Ngày Mới Vui Lòng Load Lại Trang</strong> Để Nó Nhận Diện Ngày Mới Rồi Lúc Đó Mới Được Get Link Không Thì  <strong style={{fontSize:"15px"}}>Get Lần 2 Thì Tự Chịu</strong> <br/> Luôn Phải Để Ý Trạng Thái Là "<strong><i>Sẵn Sàng Get Link Mới</i></strong>" Lúc Đó Bạn Mới Được Get Link </p>
               <p>Có Thể Xem "<strong>Thời Gian Đếm Ngược</strong>" Để Căn Giờ Được Lấy Key</p>
             </>
-          )}
+          ):(<><img src={load} ></img></>)}
         </Card>
       </div>
     </>
