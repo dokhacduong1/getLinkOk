@@ -28,7 +28,7 @@ function GetKeyUser() {
   const getLinkCollectionRef = collection(db, "linkManagement");
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [dataSource, setDataSource] = useState("");
+  const [dataSource, setDataSource] = useState("Đang Load..");
   const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
@@ -140,14 +140,14 @@ function GetKeyUser() {
     if (!dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1) {
       setDataSelect(checkGame);
      
-      setDataSource("Vui Lòng Chọn Game");
+      setDataSource("Vui Lòng Chọn Game Muốn Lấy Key");
       setCheckSuccess(!checkSuccess);
       setGetIP(responseIp.ip);
       //
     } else {
       if (dataKeyTime.length > 0) {
         const arrayTime = dataKeyTime[0].data;
-       console.log(arrayTime)
+      
         setDataSource(arrayTime);
         setStatus("Chưa Thể Get Link Mới");
       } else {
