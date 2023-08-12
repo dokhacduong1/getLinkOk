@@ -214,7 +214,7 @@ function GetKeyUser() {
               <p ><strong>Khi Đã Qua Ngày Mới Vui Lòng Load Lại Trang</strong> Để Nó Nhận Diện Ngày Mới Rồi Lúc Đó Mới Được Get Link Không Thì  <strong style={{fontSize:"15px"}}>Get Lần 2 Thì Tự Chịu</strong> <br/> Luôn Phải Để Ý Trạng Thái Là "<strong><i>Sẵn Sàng Get Link Mới</i></strong>" Lúc Đó Bạn Mới Được Get Link </p>
               <p>Có Thể Xem "<strong>Thời Gian Đếm Ngược</strong>" Để Căn Giờ Được Lấy Key</p>
             </>
-          ):(<><img src={load} ></img></>)}
+          ):(<><img style={{width:"300px"}} src={load} alt="load" ></img></>)}
         </Card>
       </div>
     </>
