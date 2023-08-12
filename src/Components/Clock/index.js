@@ -33,14 +33,19 @@ const Clock = () => {
   }
   return (
     <>
-      <div className="countdown-timer">
-        <div style={{ padding: "10px 0" }} className="time-remaining">
-          <span>
-            <i>Thời Gian Đếm Ngược</i>
-          </span>{" "}
-          <Tag>{formatTime(timeRemaining)}</Tag>
-        </div>
+    {
+      timeRemaining >0 && (<> <div className="countdown-timer">
+      <div style={{ padding: "10px 0" }} className="time-remaining">
+        <span>
+          <i>Thời Gian Đếm Ngược</i>
+        </span>{" "}
+        <Tag>{formatTime(timeRemaining)}</Tag>
       </div>
+    </div></>)
+      
+    
+    }
+     
     </>
   );
 };
