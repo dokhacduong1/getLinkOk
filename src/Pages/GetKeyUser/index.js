@@ -28,7 +28,7 @@ function GetKeyUser() {
   const getLinkCollectionRef = collection(db, "linkManagement");
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [dataSource, setDataSource] = useState("");
+  const [dataSource, setDataSource] = useState("Đang Load..");
   const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
@@ -155,7 +155,7 @@ function GetKeyUser() {
           type: "error",
           content: `Bạn Đã Truy Cập Không Đúng Trình Tự Vui Lòng Get Link Và Thử Lại!`,
         });
-        setDataSource([]);
+        setDataSource("Đang Load..");
         setStringNoti("Vui Lòng Get Link Và Thử Lại");
       }
     }
