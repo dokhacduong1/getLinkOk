@@ -28,11 +28,11 @@ function GetKeyUser() {
   const getLinkCollectionRef = collection(db, "linkManagement");
 
   const getKeyTimeUserCollectionRef = collection(db2, "keyTime");
-  const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState("Đang Load...&Chưa Có");
   const [status, setStatus] = useState("Đang Load...");
   const [getIP, setGetIP] = useState("");
   const [dataSelect, setDataSelect] = useState([]);
-  const [stringNoti, setStringNoti] = useState("Đang Load...");
+  const [stringNoti, setStringNoti] = useState("");
   const [checkSuccess, setCheckSuccess] = useState(false);
   //Hàm này sẽ xử lý khi người dùng chọn game
   const fetchApiClick = async (idGame) => {
@@ -146,6 +146,7 @@ function GetKeyUser() {
     } else {
       if (dataKeyTime.length > 0) {
         const arrayTime = dataKeyTime[0].data;
+       console.log(arrayTime)
         setDataSource(arrayTime);
         setStatus("Chưa Thể Get Link Mới");
       } else {
