@@ -140,7 +140,7 @@ function GetKeyUser() {
     if (!dataKeyTime.length > 0 && checkLinkOk && checkLoad === 1) {
       setDataSelect(checkGame);
      
-      setDataSource("Vui Lòng Chọn Game Muốn Lấy Key");
+      setDataSource("Vui Lòng Chọn Game");
       setCheckSuccess(!checkSuccess);
       setGetIP(responseIp.ip);
       //
